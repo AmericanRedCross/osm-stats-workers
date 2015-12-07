@@ -1,45 +1,45 @@
 var turf = require('turf');
 var fs = require('fs');
-var geocoder = require('country-reverse-geocoding').country_reverse_geocoding();
+// var geocoder = require('country-reverse-geocoding').country_reverse_geocoding();
 
 var data = JSON.parse(fs.readFileSync('test/example.json', 'utf8'));
 
-function connectMissingMapsDB() {
+function connectMissingMapsDB () {
   var knex = require('knex')({
     client: 'pg',
     connection: {
-      host     : 'localhost',
-      port     :  5432,
-      user     : 'postgres',
-      password : '',
-      database : 'missingmaps2'
+      host: 'localhost',
+      port: 5432,
+      user: 'postgres',
+      password: '',
+      database: 'missingmaps2'
     }
   });
-  return knex
+  return knex;
 }
 
 // Extract a property from an object
-function popProperty(data, property) {
+function popProperty (data, property) {
   var result = data[property];
   if (!delete data[property]) throw new Error();
   return result;
-};
+}
 
 // Convert 'nodes' property from OSM object to
 // GeoJSON LineString
-function nodesToLine(nodes) {
-  nodes = nodes.map(function(node) {
+function nodesToLine (nodes) {
+  nodes = nodes.map(function (node) {
     return [node.lon, node.lat];
   });
   return {
-    "type": "Feature",
-    "properties": {},
-    "geometry": {
-      "type": "LineString",
-      "coordinates": nodes
-      }
-    };
-};
+    'type': 'Feature',
+    'properties': {},
+    'geometry': {
+      'type': 'LineString',
+      'coordinates': nodes
+    }
+  };
+}
 
 // Measures the total length of an array of OSM
 // features, assuming that each of their nodes is a
@@ -56,38 +56,38 @@ function measureTotalLength (features) {
   var length = features
     // Map individual line distances
     .map(function (segment) {
-      var line = nodesToLine(segment.nodes)
-      return turf.lineDistance(line, 'kilometers')
+      var line = nodesToLine(segment.nodes);
+      return turf.lineDistance(line, 'kilometers');
     })
     // Sum line distances
     .reduce(function (a, b) {
-      return a + b
+      return a + b;
     });
   return length;
-};
+}
 
 // Connect to missing maps database
-knex = connectMissingMapsDB()
+var knex = connectMissingMapsDB();
 
 // Split OSM data into elements and metadata
 var elements = popProperty(data, 'elements');
 var metadata = data.metadata;
 
-userId = metadata.uid;
+// var userId = metadata.uid;
 
 // Get highway statistics (count and total length)
 var highways = elements.filter(function (element) {
   return element.tags.highway === 'yes';
 });
-var highwayCount = highways.length
-var highwayLength = measureTotalLength(highways)
+var highwayCount = highways.length;
+var highwayLength = measureTotalLength(highways);
 
 // Get waterway statistics (count and total length)
 var waterways = elements.filter(function (element) {
   return element.tags.waterway === 'yes';
 });
-var waterwayCount = waterways.length
-var waterwayLength = measureTotalLength(waterways)
+var waterwayCount = waterways.length;
+var waterwayLength = measureTotalLength(waterways);
 
 // Get building count count
 var buildingCount = elements.filter(function (element) {
@@ -95,19 +95,19 @@ var buildingCount = elements.filter(function (element) {
 }).length;
 
 // Looks up country at centroid of changeset
-function reverseGeocodeCountry (metadata) {
-  var lat = (+metadata.min_lat + +metadata.max_lat) / 2;
-  var lon = (+metadata.min_lon + +metadata.max_lon) / 2;
-  return geocoder.get_country(lat, lon).name;
-};
+// function reverseGeocodeCountry (metadata) {
+//   var lat = (+metadata.min_lat + +metadata.max_lat) / 2;
+//   var lon = (+metadata.min_lon + +metadata.max_lon) / 2;
+//   return geocoder.get_country(lat, lon).name;
+// }
 
-var country = reverseGeocodeCountry(metadata)
+// var country = reverseGeocodeCountry(metadata);
 
-function checkId(table, value) {
-  return knex(table).select('id').where({id: value})
+function checkId (table, value) {
+  return knex(table).select('id').where({id: value});
 }
 
-function addUser() {
+function addUser () {
   return checkId('osmuser', metadata.uid).then(function (users) {
     if (users.length === 0) {
       return knex.insert(
@@ -116,8 +116,8 @@ function addUser() {
           name: metadata.user
         })
         .into('osmuser');
-  }
-    else console.log('user exists')
+    }
+    else console.log('user exists');
   });
 }
 
@@ -140,10 +140,10 @@ function insertChangeset () {
       })
       .into('changeset')
       .then(function (id) {
-        console.log('updated ' + id)
+        console.log('updated ' + id);
       });
-  })
+  });
 }
 
-insertChangeset()
+insertChangeset();
 
