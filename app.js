@@ -1,6 +1,6 @@
 var turf = require('turf');
 var fs = require('fs');
-var geocoder = require('country-reverse-geocoding').country_reverse_geocoding();
+// var geocoder = require('country-reverse-geocoding').country_reverse_geocoding();
 
 var data = JSON.parse(fs.readFileSync('test/example.json', 'utf8'));
 
@@ -37,8 +37,8 @@ function nodesToLine (nodes) {
     'geometry': {
       'type': 'LineString',
       'coordinates': nodes
-      }
-    };
+    }
+  };
 }
 
 // Measures the total length of an array of OSM
@@ -73,7 +73,7 @@ var knex = connectMissingMapsDB();
 var elements = popProperty(data, 'elements');
 var metadata = data.metadata;
 
-var userId = metadata.uid;
+// var userId = metadata.uid;
 
 // Get highway statistics (count and total length)
 var highways = elements.filter(function (element) {
@@ -95,13 +95,13 @@ var buildingCount = elements.filter(function (element) {
 }).length;
 
 // Looks up country at centroid of changeset
-function reverseGeocodeCountry (metadata) {
-  var lat = (+metadata.min_lat + +metadata.max_lat) / 2;
-  var lon = (+metadata.min_lon + +metadata.max_lon) / 2;
-  return geocoder.get_country(lat, lon).name;
-}
+// function reverseGeocodeCountry (metadata) {
+//   var lat = (+metadata.min_lat + +metadata.max_lat) / 2;
+//   var lon = (+metadata.min_lon + +metadata.max_lon) / 2;
+//   return geocoder.get_country(lat, lon).name;
+// }
 
-var country = reverseGeocodeCountry(metadata);
+// var country = reverseGeocodeCountry(metadata);
 
 function checkId (table, value) {
   return knex(table).select('id').where({id: value});
@@ -116,7 +116,7 @@ function addUser () {
           name: metadata.user
         })
         .into('osmuser');
-  }
+    }
     else console.log('user exists');
   });
 }

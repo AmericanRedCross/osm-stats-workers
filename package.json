@@ -16,6 +16,7 @@
     "turf": "^2.0.2"
   },
   "devDependencies": {
-    "eslint": "^1.10.3"
+    "eslint": "^1.10.3",
+    "eslint-config-semistandard": "^5.0.0"
   }
 }
