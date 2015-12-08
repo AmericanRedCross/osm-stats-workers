@@ -11,13 +11,13 @@ var roadLength = require('../src/metrics/road_length');
 var waterwayLength = require('../src/metrics/river_length');
 
 var changeset = JSON.parse(fs.readFileSync('./example.json', 'utf8'));
-
+console.log(changeset)
 var User = db.User;
 var Changeset = db.Changeset;
 
 function addUser (id, name) {
-  User.where('id', id).fetch().then(function (user) {
-    if (!user) {
+  User.where('id', id).fetch().then(function (users) {
+    if (!users) {
       new User(
         {
           id: id,
@@ -32,8 +32,8 @@ function addUser (id, name) {
 
 function addChangeset (changeset) {
   var id = changeset.metadata.id;
-  Changeset.where('id', id).fetch().then(function (changeset) {
-    if (!changeset) {
+  Changeset.where('id', id).fetch().then(function (changesets) {
+    if (!changesets) {
       new Changeset(
         {
           id: id,
