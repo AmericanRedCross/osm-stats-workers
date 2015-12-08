@@ -10,7 +10,7 @@ var poiCount = require('../src/metrics/poi_count');
 var roadLength = require('../src/metrics/road_length');
 var waterwayLength = require('../src/metrics/river_length');
 
-var changeset = JSON.parse(fs.readFileSync('example.json', 'utf8'));
+var changeset = JSON.parse(fs.readFileSync('./example.json', 'utf8'));
 
 var User = db.User;
 var Changeset = db.Changeset;
@@ -32,8 +32,8 @@ function addUser (id, name) {
 
 function addChangeset (changeset) {
   var id = changeset.metadata.id;
-  Changeset.where('id', id).fetch().then(function (user) {
-    if (!user) {
+  Changeset.where('id', id).fetch().then(function (changeset) {
+    if (!changeset) {
       new Changeset(
         {
           id: id,
