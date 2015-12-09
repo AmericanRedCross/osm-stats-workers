@@ -53,3 +53,9 @@ var Badge = bookshelf.Model.extend({
     return this.belongToMany(User); // m2m with users
   }
 });
+
+module.exports.Changeset = Changeset;
+module.exports.Hashtag = Hashtag;
+module.exports.User = User;
+module.exports.Country = Country;
+module.exports.Badge = Badge;
