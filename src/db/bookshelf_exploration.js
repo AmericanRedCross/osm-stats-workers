@@ -14,8 +14,8 @@ var User = db.User;
 var Changeset = db.Changeset;
 
 function addUser (id, name) {
-  User.where('id', id).fetch().then(function (users) {
-    if (!users) {
+  User.where('id', id).fetch().then(function (dbUser) {
+    if (!dbUser) {
       new User(
         {
           id: id,
@@ -28,10 +28,10 @@ function addUser (id, name) {
   });
 }
 
-function addChangeset (changesets) {
+function addChangeset (changeset) {
   var id = changeset.metadata.id;
-  Changeset.where('id', id).fetch().then(function (changesets) {
-    if (!changeset) {
+  Changeset.where('id', id).fetch().then(function (dbChangeset) {
+    if (!dbChangeset) {
       new Changeset(
         {
           id: id,
