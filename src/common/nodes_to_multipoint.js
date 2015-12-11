@@ -1,5 +1,5 @@
 // Takes OSM node array and returns a MultiPoint GeoJSON feature.
-module.exports = function createMultipoint (features) {
+module.exports = function (features) {
   return {
     'type': 'Feature',
     'geometry': {

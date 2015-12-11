@@ -1,11 +1,11 @@
 var turf = require('turf');
 var gjp = require('geojson-precision');
-var createMultipoint = require('../common/create_multipoint');
-var createMultiway = require('../common/create_multiway');
+var nodesToMultipoints = require('../common/nodes_to_multipoint');
+var nodesToMlMp = require('../common/ways_to_multiline_multipolygon');
 
 // Takes OSM changeset and buffer distance in meters. Returns
 // buffered changeset features as GeoJSON.
-module.exports = function makeUserExtent (changeset, bufferDistance) {
+module.exports = function (changeset, bufferDistance) {
   var elements = changeset.elements;
 
   // Filter OSM changesets for attributed lines, polygons, and points
@@ -23,9 +23,9 @@ module.exports = function makeUserExtent (changeset, bufferDistance) {
   });
 
   // Convert OSM changset feature objects to multipart GeoJSON features
-  var multiLine = createMultiway(lineEdits, 'MultiLineString');
-  var multiPolygon = createMultiway(buildingEdits, 'MultiPolygon');
-  var multiPoint = createMultipoint(poiEdits);
+  var multiLine = nodesToMlMp(lineEdits, 'MultiLineString');
+  var multiPolygon = nodesToMlMp(buildingEdits, 'MultiPolygon');
+  var multiPoint = nodesToMultipoints(poiEdits);
 
   // There appears to be a bug in turf.buffer which prevents it from
   // processing a feature collection containing points and polgons. Specifically,

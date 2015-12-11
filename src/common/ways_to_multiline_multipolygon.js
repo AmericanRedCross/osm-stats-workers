@@ -1,7 +1,7 @@
-// Takes OSM way array and output GeoJSON type string (either
+// Takes OSM way array and outputs GeoJSON type string (either
 // MultiPolygon or MultiLineString). Returns multipart GeoJSON
 // feature of requested type.
-module.exports = function createMultiway (features, type) {
+module.exports = function (features, type) {
   var array;
   // There should be a less verbose way to wrap polygons in an
   // extra array as compared to linestrings, I would think...
