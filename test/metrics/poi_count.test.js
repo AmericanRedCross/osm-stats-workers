@@ -1,7 +1,7 @@
 var fs = require('fs');
 var tap = require('tap');
 var poiCount = require('../src/metrics/poi_count');
-var changeset = JSON.parse(fs.readFileSync('test/example.json', 'utf8'));
+var changeset = JSON.parse(fs.readFileSync('fixtures/example.json', 'utf8'));
 
 tap.test('test POI count', function (t) {
   t.equal(poiCount(changeset), 0);

@@ -38,7 +38,7 @@
     },
     {
       "id": "-2",
-      "action": "modify",
+      "action": "create",
       "type": "way",
       "tags": {
         "building": "yes"

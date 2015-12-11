@@ -1,4 +1,4 @@
-// Takes changeset, returns count of road features
+// Takes changeset, returns count of edited buildings
 module.exports = function (changeset) {
   var elements = changeset.elements;
   var buildings = elements.filter(function (element) {
