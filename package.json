@@ -4,7 +4,7 @@
   "description": "A small knex test",
   "main": "app.js",
   "scripts": {
-    "test": "npm run lint && tap test/*.js ",
+    "test": "npm run lint && tap test/*/*.test.js ",
     "lint": "eslint ."
   },
   "author": "",
