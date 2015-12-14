@@ -7,7 +7,9 @@
       "type": "node",
       "tags": {
         "amenity": "hospital"
-      }
+      },
+      "lat": "0",
+      "lon": "0"
     }
   ]
 }
