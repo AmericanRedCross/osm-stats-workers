@@ -1,0 +1,13 @@
+{
+  "metadata": {},
+  "elements": [
+    {
+      "id": "-1",
+      "action": "create",
+      "type": "node",
+      "tags": {
+        "amenity": "hospital"
+      }
+    }
+  ]
+}
