@@ -1,0 +1,75 @@
+{
+  "metadata": {},
+  "elements": [
+    {
+      "id": "-1",
+      "action": "modify",
+      "type": "way",
+      "tags": {
+        "building": "yes"
+      },
+      "nodes": [
+        {
+          "ref": "-11",
+          "lat": "0",
+          "lon": "0"
+        },
+        {
+          "ref": "-12",
+          "lat": "0",
+          "lon": "1"
+        },
+        {
+          "ref": "-13",
+          "lat": "1",
+          "lon": "1"
+        },
+        {
+          "ref": "-14",
+          "lat": "1",
+          "lon": "0"
+        },
+        {
+          "ref": "-11",
+          "lat": "0",
+          "lon": "0"
+        }
+      ]
+    },
+    {
+      "id": "-2",
+      "action": "create",
+      "type": "way",
+      "tags": {
+        "building": "yes"
+      },
+      "nodes": [
+        {
+          "ref": "-21",
+          "lat": "20",
+          "lon": "20"
+        },
+        {
+          "ref": "-22",
+          "lat": "20",
+          "lon": "21"
+        },
+        {
+          "ref": "-23",
+          "lat": "21",
+          "lon": "21"
+        },
+        {
+          "ref": "-24",
+          "lat": "21",
+          "lon": "20"
+        },
+        {
+          "ref": "-21",
+          "lat": "20",
+          "lon": "20"
+        }
+      ]
+    }
+  ]
+}

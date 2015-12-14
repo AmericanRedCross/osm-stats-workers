@@ -4,7 +4,9 @@ var measureWayLength = require('../common/measure_way_length');
 module.exports = function (changeset) {
   var elements = changeset.elements;
   var waterways = elements.filter(function (element) {
-    return element.tags.hasOwnProperty('waterway');
+    return (element.tags &&
+            element.action === 'create' &&
+            element.tags.hasOwnProperty('waterway'));
   });
   return measureWayLength(waterways);
 };

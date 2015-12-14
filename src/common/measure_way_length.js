@@ -23,6 +23,6 @@ module.exports = function (features) {
     // Sum all line distances
     .reduce(function (a, b) {
       return a + b;
-    });
+    }, 0);
   return length;
 };
