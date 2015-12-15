@@ -1,4 +1,4 @@
-// Returns Bookshelf connection to the local
+// Returns knex connection to the local
 // missingmaps database
 module.exports = require('knex')({
   client: 'pg',
