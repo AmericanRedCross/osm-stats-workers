@@ -14,12 +14,10 @@
     "bookshelf": "^0.9.1",
     "country-reverse-geocoding": "^0.2.2",
     "fs": "0.0.2",
-    "geojson-normalize": "0.0.1",
     "geojson-precision": "^0.4.0",
     "knex": "^0.9.0",
     "pg": "^4.4.3",
-    "turf": "^2.0.2",
-    "turf-featurecollection": "^1.0.1"
+    "turf": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "^1.10.3",

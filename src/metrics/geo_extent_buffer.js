@@ -8,24 +8,25 @@ var nodesToMlMp = require('../common/ways_to_multiline_multipolygon');
 module.exports = function (changeset, bufferDistance) {
   var elements = changeset.elements;
 
-  // Filter OSM changesets for attributed lines, polygons, and points
-  var lineEdits = elements.filter(function (element) {
-    return element.tags.hasOwnProperty('waterway') ||
-           element.tags.hasOwnProperty('highway');
+  // Filter OSM changeset for attributed lines (waterway and highway),
+  // building polygons, and all nodes. Should the nodes be limited
+  // to only amenities, as in the case of the count metrics?
+  var lines = elements.filter(function (element) {
+    return (element.tags &&
+           (element.tags.hasOwnProperty('waterway') ||
+            element.tags.hasOwnProperty('highway')));
   });
-  var buildingEdits = elements.filter(function (element) {
-    return element.tags.hasOwnProperty('building');
+  var buildings = elements.filter(function (element) {
+    return (element.tags && element.tags.hasOwnProperty('building'));
   });
-  // Removing amenity requirement to target unattributed test data, for now
-  var poiEdits = elements.filter(function (element) {
-    return element.type === 'node'; // &&
-    // element.tags.hasOwnProperty('amenity');
+  var nodes = elements.filter(function (element) {
+    return (element.type && element.type === 'node');
   });
 
   // Convert OSM changset feature objects to multipart GeoJSON features
-  var multiLine = nodesToMlMp(lineEdits, 'MultiLineString');
-  var multiPolygon = nodesToMlMp(buildingEdits, 'MultiPolygon');
-  var multiPoint = nodesToMultipoints(poiEdits);
+  var multiLine = nodesToMlMp(lines, 'MultiLineString');
+  var multiPolygon = nodesToMlMp(buildings, 'MultiPolygon');
+  var multiPoint = nodesToMultipoints(nodes);
 
   // There appears to be a bug in turf.buffer which prevents it from
   // processing a feature collection containing points and polgons. Specifically,
