@@ -68,8 +68,8 @@ Simulation.prototype.editWay = function (opts) {
   var dlon = chance.floating({min: -0.00003, max: 0.00003});
 
   for (var i = 1; i <= n; i++) {
-    lat = lat + dlat ;
-    lon = lon + dlon; 
+    lat = lat + dlat;
+    lon = lon + dlon;
     dlat = dlat + chance.floating({min: -0.00001, max: 0.00001});
     dlon = dlon + chance.floating({min: -0.00001, max: 0.00001});
     elements.push(this.editNode({center: center,

@@ -1,3 +1,4 @@
+/* global L */
 var Simulator = require('./simulator.js');
 var buildingCount = require('../../src/metrics/building_count');
 var riverCount = require('../../src/metrics/river_count');
@@ -13,7 +14,7 @@ var map = L.mapbox.map('map', 'mapbox.streets')
 
 var stats = document.getElementById('stats');
 
-function addChangeset() {
+function addChangeset () {
   var changeset = simulation.randomChangeset();
   var geojsonDiff = {
     'type': 'FeatureCollection',
@@ -29,7 +30,7 @@ function addChangeset() {
   geojsonLayer.addData(geojsonDiff);
   map.fitBounds(geojsonLayer.getBounds(), {maxZoom: 16});
 
-  stats.innerHTML = '<h2> Changes by ' + changeset.metadata.user + '</h2>' + 
+  stats.innerHTML = '<h2> Changes by ' + changeset.metadata.user + '</h2>' +
   '<ul>' +
   '<li> hashtag: ' + changeset.metadata.comment + '</li>' +
   '<li> buildings edited: ' + buildingCount(changeset) + '</li>' +
@@ -39,7 +40,7 @@ function addChangeset() {
   '<li> roads added: ' + (1000 * kmRoad(changeset)).toFixed(2) + ' m. </li>' +
   '<li> rivers added: ' + (1000 * kmRiver(changeset)).toFixed(2) + ' m. </li>' +
   '</ul>';
-};
+}
 
 setInterval(addChangeset, 3000);
 
