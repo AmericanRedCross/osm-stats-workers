@@ -2,20 +2,11 @@ var fs = require('fs');
 var knex = require('./src/common/db_connection_knex');
 var bookshelf = require('bookshelf')(knex);
 var Promise = require('bluebird');
-// require metric extraction workers
-var country = require('./src/metrics/country');
-var roadCount = require('./src/metrics/road_count');
-var buildingCount = require('./src/metrics/building_count');
-var waterwayCount = require('./src/metrics/river_count');
-var poiCount = require('./src/metrics/poi_count');
-var gpstraceCount = require('./src/metrics/trace_count');
-var roadLength = require('./src/metrics/road_length');
-var waterwayLength = require('./src/metrics/river_length');
-var gpstraceLength = require('./src/metrics/trace_length');
-var extentBuffer = require('./src/metrics/geo_extent_buffer');
-// var extentCvHull = require('./src/metrics/geo_extent_convexhull');
+
+var calculateMetrics = require('./src/calculate_metrics');
+
 // require models
-var db = require('./src/models/models_tmp');
+var db = require('./src/models/models');
 var Changeset = db.Changeset;
 var User = db.User;
 var Hashtag = db.Hashtag;
@@ -123,38 +114,9 @@ function updateDB (metrics) {
 });
 }
 
-function extractMetrics (srcChangeset) {
-  return {
-    id: +srcChangeset.metadata.id,
-    hashtags: srcChangeset.metadata.comment.split(' '),
-    country: country(srcChangeset),
-    user: {
-      id: +srcChangeset.metadata.uid,
-      name: srcChangeset.metadata.user,
-      // todo: add avatar lookup
-      avatar: '?',
-      geo_extent: extentBuffer(srcChangeset, 100) // ,
-      // convex hull much faster to calculate, but less meaningful
-      // geoExtent: extentCvHull(srcChangeset),
-    },
-    metrics: {
-      road_count: roadCount(srcChangeset),
-      building_count: buildingCount(srcChangeset),
-      waterway_count: waterwayCount(srcChangeset),
-      poi_count: poiCount(srcChangeset),
-      road_km: ~~(roadLength(srcChangeset) * 100),
-      waterway_km: ~~(waterwayLength(srcChangeset) * 100),
-      // todo: add GPS trace lookup; placeholder functions return 0
-      gpstrace_count: gpstraceCount('srcGpstraces'),
-      gpstrace_km: ~~(gpstraceLength('srcGpstraces') * 100)
-    },
-    editor: srcChangeset.metadata.created_by,
-    created_at: srcChangeset.metadata.created_at
-  };
-}
-
-var srcChangeset = JSON.parse(
+var changeset = JSON.parse(
   fs.readFileSync('./test/fixtures/example.json', 'utf8'));
 
-var metrics = extractMetrics(srcChangeset);
-updateDB(metrics);
+var metrics = calculateMetrics(changeset, 'buffer');
+
+console.log(JSON.stringify(metrics));
