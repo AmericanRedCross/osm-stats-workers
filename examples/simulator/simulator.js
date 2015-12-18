@@ -10,6 +10,7 @@ var amenities = ['hospital', 'drinking_water', 'clinic', 'school', 'bus_station'
 var actions = ['create', 'modify'];
 var geojsonLayer = fs.readFileSync('./country_points.json');
 var countries = JSON.parse(geojsonLayer).features;
+var hashtags = chance.n(chance.hashtag, 3);
 
 function Simulation () {
   // Generate users
@@ -30,7 +31,7 @@ function stub () {
 
 function mapathon () {
   var country = chance.pick(countries);
-  return {lat: country.geometry.coordinates[1], lon: country.geometry.coordinates[0], hashtag: chance.hashtag()};
+  return {lat: country.geometry.coordinates[1], lon: country.geometry.coordinates[0], hashtag: chance.pick(hashtags)};
 }
 console.log(mapathon());
 

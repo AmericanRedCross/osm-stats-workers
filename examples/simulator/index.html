@@ -8,17 +8,32 @@
   <style type="text/css" media="screen">
 body {
   margin: 0px; padding: 0px;
+  font-family: helvetica;
 }
 #map {
   position: absolute;
   height: 100%;
   width: 100%;
 }
+#stats {
+  position: absolute;
+  z-index: 99;
+  height: 300px;
+  width: 250px;
+  background-color: white;
+  top: 5px;
+  right: 20px;
+  padding: 20px;
+
+}
   </style>
 </head>
 
 <body>
   <div id="map"></div>
+  <div id="stats">
+    <h1>Stats for OSM</h1>
+  </div>
   <script src="bundle.js" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>
