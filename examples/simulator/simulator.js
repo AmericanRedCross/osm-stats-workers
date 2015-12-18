@@ -189,16 +189,16 @@ Simulation.prototype.randomChangeset = function () {
     switch (thing) {
       case 'highway':
         changeset = this.editHighway(changeset, opts);
-      break;
+        break;
       case 'river':
         changeset = this.editRiver(changeset, opts);
-      break;
+        break;
       case 'building':
         changeset = this.editBuilding(changeset, opts);
-      break;
+        break;
       case 'amenity':
         changeset = this.editAmenity(changeset, opts);
-      break;
+        break;
       default:
         break;
     }
