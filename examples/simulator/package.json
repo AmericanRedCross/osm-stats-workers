@@ -4,7 +4,7 @@
   "description": "A simulator for OSM data",
   "main": "simulator.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "budo index.js:bundle.js -- -t [ brfs babelify ]"
   },
   "author": "Marc Farra",
   "license": "GPL-3.0",

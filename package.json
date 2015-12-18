@@ -1,7 +1,7 @@
 {
-  "name": "test",
-  "version": "0.0.0",
-  "description": "A small knex test",
+  "name": "osm-gamification-workers",
+  "version": "0.0.1",
+  "description": "Summarize OSM data to metrics",
   "main": "app.js",
   "scripts": {
     "test": "npm run lint && tap test/*/*.test.js ",
@@ -12,7 +12,6 @@
   "dependencies": {
     "bluebird": "^3.0.6",
     "bookshelf": "^0.9.1",
-    "chance": "^0.8.0",
     "country-reverse-geocoding": "^0.2.2",
     "fs": "0.0.2",
     "geojson-normalize": "0.0.1",
@@ -20,7 +19,6 @@
     "knex": "^0.9.0",
     "moment": "^2.10.6",
     "pg": "^4.4.3",
-    "ramda": "^0.18.0",
     "turf": "^2.0.2",
     "turf-featurecollection": "^1.0.1"
   },
