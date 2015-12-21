@@ -1,19 +1,20 @@
-var knex = require('../common/db_connection_knex');
-var bookshelf = require('bookshelf')(knex);
-var User = require('./User');
-var Hashtag = require('./Hashtag');
-var Country = require('./Country');
+var bookshelf = require('../common/bookshelf_init');
+require('./User');
+require('./Hashtag');
+require('./Country');
 
 // Returns Changeset model
-module.exports = bookshelf.Model.extend({
+var Changeset = bookshelf.Model.extend({
   tableName: 'changesets',
   users: function () {
-    return this.belongsTo(User);
+    return this.belongsTo('User');
   },
   hashtags: function () {
-    return this.belongsToMany(Hashtag);
+    return this.belongsToMany('Hashtag');
   },
   countries: function () {
-    return this.belongsToMany(Country);
+    return this.belongsToMany('Country');
   }
 });
+
+module.exports = bookshelf.model('Changeset', Changeset);
