@@ -1,14 +1,16 @@
 var fs = require('fs');
 var bookshelf = require('./src/common/bookshelf_init');
+var R = require('ramda');
 var Promise = require('bluebird');
 var calculateMetrics = require('./src/calculate_metrics');
 
-var changeset = JSON.parse(
-  fs.readFileSync('./test/fixtures/example.json', 'utf8'));
+var changeset = JSON.parse(fs.readFileSync('./test/fixtures/example.json', 'utf8'));
 var metrics = calculateMetrics(changeset);
+var hashtags = getHashtags(changeset.metadata.comment);
 
 var User = require('./src/models/User');
 var Changeset = require('./src/models/Changeset');
+var Hashtag = require('./src/models/Hashtag');
 
 function createUserIfNotExists (user) {
   return User.where({id: user.id}).fetch().then(function (result) {
@@ -28,8 +30,38 @@ function createUserIfNotExists (user) {
   });
 }
 
+function getHashtags (str) {
+  if (!str) return [];
+  var wordlist = str.split(' ');
+  var hashlist = [];
+  wordlist.forEach(function (word) {
+    if (word.startsWith('#') && !R.contains(word, hashlist)) {
+      word = word.trim();
+      word = word.replace(/,\s*$/, '');
+      hashlist.push(word.slice(1));
+    }
+  });
+  return hashlist;
+}
+
+function createHashtags (hashtags) {
+  return Promise.map(hashtags, function (hashtag) {
+    return Hashtag.where('hashtag', hashtag).fetch()
+    .then(function (result) {
+      if (!result) {
+        return Hashtag.forge({
+          hashtag: hashtag,
+          created_at: new Date()
+        }).save();
+      } else {
+        return result;
+      }
+    });
+  });
+}
+
 function addToDB (metrics) {
-  var changeset = new Changeset({
+  return Changeset.forge({
     id: metrics.id,
     road_count: metrics.metrics.road_count,
     building_count: metrics.metrics.building_count,
@@ -42,13 +74,22 @@ function addToDB (metrics) {
     editor: metrics.editor,
     user_id: metrics.user.id,
     created_at: new Date(metrics.created_at)
+  }).save(null, {method: 'insert'})
+  .then(function (changeset) {
+    return Promise.all([
+      createUserIfNotExists(metrics.user),
+      createHashtags(hashtags)
+    ])
+    .then(function (results) {
+      var hashtags = results[1];
+      return changeset.hashtags().attach(hashtags);
+    })
+    .catch(function (err) {
+      console.error(err);
+    });
   });
-
-  return Promise.all([createUserIfNotExists(metrics.user)])
-  .catch(function (err) {
-    console.error(err);
-  })
 }
+
 addToDB(metrics).then(function (results) {
   console.log(results);
 });
@@ -117,7 +158,7 @@ function updateDB (metrics) {
             user_id: metrics.user.id,
             created_at: new Date(metrics.created_at)
           })
-        .save(null, {method: 'insert', transacting: t});
+          .save(null, {method: 'insert', transacting: t});
         } else {
           throw new Error('Changeset ' + metrics.id + ' exists');
         }
@@ -130,13 +171,12 @@ function updateDB (metrics) {
           return new Hashtag({
             hashtag: name,
             created_at: new Date()})
-        .save({}, {method: 'insert', transacting: t});
+            .save({}, {method: 'insert', transacting: t});
         });
     });
   })
-.catch(function (err) {
-  console.error(err);
-});
+  .catch(function (err) {
+    console.error(err);
+  });
 }
-
 
