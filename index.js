@@ -1,3 +1,5 @@
+require('string.prototype.startswith');
+
 var fs = require('fs');
 var bookshelf = require('./src/common/bookshelf_init');
 var R = require('ramda');
@@ -11,6 +13,29 @@ var hashtags = getHashtags(changeset.metadata.comment);
 var User = require('./src/models/User');
 var Changeset = require('./src/models/Changeset');
 var Hashtag = require('./src/models/Hashtag');
+
+function createChangesetIfNotExists (metrics, transaction) {
+  return Changeset.where({id: metrics.id}).fetch().then(function (result) {
+    if (!result) {
+      return Changeset.forge({
+        id: metrics.id,
+        road_count: metrics.metrics.road_count,
+        building_count: metrics.metrics.building_count,
+        waterway_count: metrics.metrics.waterway_count,
+        poi_count: metrics.metrics.poi_count,
+        gpstrace_count: metrics.metrics.gpstrace_count,
+        road_km: metrics.metrics.road_km,
+        waterway_km: metrics.metrics.waterway_km,
+        gpstrace_km: metrics.metrics.gpstrace_km,
+        editor: metrics.editor,
+        user_id: metrics.user.id,
+        created_at: new Date(metrics.created_at)
+      }).save(null, {method: 'insert', transacting: transaction});
+    } else {
+      return result;
+    }
+  });
+}
 
 function createUserIfNotExists (user, transaction) {
   return User.where({id: user.id}).fetch().then(function (result) {
@@ -62,26 +87,14 @@ function createHashtags (hashtags, transaction) {
 
 function addToDB (metrics) {
   return bookshelf.transaction(function (t) {
-    return Changeset.forge({
-      id: metrics.id,
-      road_count: metrics.metrics.road_count,
-      building_count: metrics.metrics.building_count,
-      waterway_count: metrics.metrics.waterway_count,
-      poi_count: metrics.metrics.poi_count,
-      gpstrace_count: metrics.metrics.gpstrace_count,
-      road_km: metrics.metrics.road_km,
-      waterway_km: metrics.metrics.waterway_km,
-      gpstrace_km: metrics.metrics.gpstrace_km,
-      editor: metrics.editor,
-      user_id: metrics.user.id,
-      created_at: new Date(metrics.created_at)
-    }).save(null, {method: 'insert', transacting: t})
+    return createUserIfNotExists(metrics.user, t)
     .then(function (changeset) {
       return Promise.all([
-        createUserIfNotExists(metrics.user, t),
+        createChangesetIfNotExists(metrics, t),
         createHashtags(hashtags, t)
       ])
       .then(function (results) {
+        var changeset = results[0];
         var hashtags = results[1];
         return changeset.hashtags().attach(hashtags, {transacting: t});
       })
