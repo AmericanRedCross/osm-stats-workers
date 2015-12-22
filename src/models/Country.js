@@ -1,5 +1,4 @@
-var knex = require('../common/db_connection_knex');
-var bookshelf = require('bookshelf')(knex);
+var bookshelf = require('../common/bookshelf_init');
 var Changeset = require('./Changeset');
 
 // Returns Country model

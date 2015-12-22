@@ -31,7 +31,7 @@ module.exports = function (changeset, precision) {
       id: +metadata.uid,
       name: metadata.user,
       avatar: '?', // todo: add avatar lookup
-      geoExtent: geoExtentFunc(changeset)
+      geo_extent: geoExtentFunc(changeset)
     },
     metrics: {
       road_count: roadCount(changeset),

@@ -1,15 +1,16 @@
-var knex = require('../common/db_connection_knex');
-var bookshelf = require('bookshelf')(knex);
-var Changeset = require('./Changeset');
-var Badge = require('./Badge');
+var bookshelf = require('../common/bookshelf_init');
+require('./Changeset');
+require('./Badge');
 
 // Returns User model
-module.exports = bookshelf.Model.extend({
+var User = bookshelf.Model.extend({
   tableName: 'users',
   changesets: function () {
-    return this.hasMany(Changeset);
+    return this.hasMany('Changeset');
   },
   badges: function () {
-    this.belongsToMany(Badge);
+    this.belongsToMany('Badge');
   }
 });
+
+module.exports = bookshelf.model('User', User);

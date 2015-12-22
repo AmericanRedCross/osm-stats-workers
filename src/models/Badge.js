@@ -1,11 +1,12 @@
-var knex = require('../common/db_connection_knex');
-var bookshelf = require('bookshelf')(knex);
-var User = require('./User');
+var bookshelf = require('../common/bookshelf_init');
+require('./User');
 
 // Returns Badge model
-module.exports = bookshelf.Model.extend({
+var Badge = bookshelf.Model.extend({
   tableName: 'badges',
   users: function () {
-    return this.belongToMany(User);
+    return this.belongToMany('User');
   }
 });
+
+module.exports = bookshelf.model('Badge', Badge);
