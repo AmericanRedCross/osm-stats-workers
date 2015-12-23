@@ -87,20 +87,18 @@ function createHashtags (hashtags, transaction) {
 
 function addToDB (metrics) {
   return bookshelf.transaction(function (t) {
-    return createUserIfNotExists(metrics.user, t)
-    .then(function (changeset) {
-      return Promise.all([
-        createChangesetIfNotExists(metrics, t),
-        createHashtags(hashtags, t)
-      ])
-      .then(function (results) {
-        var changeset = results[0];
-        var hashtags = results[1];
-        return changeset.hashtags().attach(hashtags, {transacting: t});
-      })
-      .catch(function (err) {
-        console.error(err);
-      });
+    return Promise.all([
+      createUserIfNotExists(metrics.user, t),
+      createChangesetIfNotExists(metrics, t),
+      createHashtags(hashtags, t)
+    ])
+    .then(function (results) {
+      var changeset = results[1];
+      var hashtags = results[2];
+      return changeset.hashtags().attach(hashtags, {transacting: t});
+    })
+    .catch(function (err) {
+      console.error(err);
     });
   });
 }
