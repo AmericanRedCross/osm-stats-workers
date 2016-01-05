@@ -13,6 +13,7 @@ var hashtags = getHashtags(changeset.metadata.comment);
 var User = require('./src/models/User');
 var Changeset = require('./src/models/Changeset');
 var Hashtag = require('./src/models/Hashtag');
+var Country = require('./src/models/Country');
 
 function createChangesetIfNotExists (metrics, transaction) {
   return Changeset.where({id: metrics.id}).fetch().then(function (result) {
@@ -85,17 +86,26 @@ function createHashtags (hashtags, transaction) {
   });
 }
 
+function lookupCountry (country) {
+  return Country.where({name: country}).fetch();
+}
+
 function addToDB (metrics) {
   return bookshelf.transaction(function (t) {
     return Promise.all([
       createUserIfNotExists(metrics.user, t),
       createChangesetIfNotExists(metrics, t),
-      createHashtags(hashtags, t)
+      createHashtags(hashtags, t),
+      lookupCountry(metrics.country, t)
     ])
     .then(function (results) {
       var changeset = results[1];
       var hashtags = results[2];
-      return changeset.hashtags().attach(hashtags, {transacting: t});
+      var country = results[3];
+      return Promise.all([
+        changeset.hashtags().attach(hashtags, {transacting: t}),
+        changeset.countries().attach(country, {transacting: t})
+      ]);
     })
     .catch(function (err) {
       console.error(err);
