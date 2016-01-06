@@ -4,7 +4,7 @@ exports.up = function (knex, Promise) {
       table.integer('id').primary();
       table.string('name');
       table.string('avatar');
-      table.string('geo_extent');
+      table.json('geo_extent');
       table.timestamp('created_at');
     })
     .createTable('changesets', function (table) {

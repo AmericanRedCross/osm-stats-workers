@@ -6,5 +6,8 @@ module.exports = {
     user: 'postgres',
     password: '',
     database: 'missingmaps'
+  },
+  seeds: {
+    directory: './seeds'
   }
 };
