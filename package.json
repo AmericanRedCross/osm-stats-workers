@@ -14,13 +14,15 @@
     "bookshelf": "^0.9.1",
     "country-reverse-geocoding": "^0.2.2",
     "fs": "0.0.2",
-    "geojson-normalize": "0.0.1",
     "geojson-precision": "^0.4.0",
+    "install": "^0.4.1",
     "knex": "^0.9.0",
     "moment": "^2.10.6",
+    "npm": "^3.5.2",
     "pg": "^4.4.3",
-    "turf": "^2.0.2",
-    "turf-featurecollection": "^1.0.1"
+    "ramda": "^0.19.0",
+    "string.prototype.startswith": "^0.2.0",
+    "turf": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "^1.10.3",
