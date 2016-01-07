@@ -1,5 +1,5 @@
 {
-  "tier0": {
+  "user_with_no_badges": {
     "roads": 1,
     "roadMods": 1,
     "pois": 1,
@@ -14,7 +14,7 @@
     "josm": 0,
     "hashtags": 1
   },
-  "tier1": {
+  "user_with_tier1_badges": {
     "roads": 100,
     "roadMods": 100,
     "pois": 500,
@@ -29,7 +29,7 @@
     "josm": 1,
     "hashtags": 5
   },
-  "tier2": {
+  "user_with_tier2_badges": {
     "roads": 500,
     "roadMods": 500,
     "pois": 2500,
@@ -44,7 +44,7 @@
     "josm": 10,
     "hashtags": 20
   },
-  "tier3": {
+  "user_with_tier3_badges": {
     "roads": 1000,
     "roadMods": 1000,
     "pois": 5000,
@@ -59,4 +59,4 @@
     "josm": 100,
     "hashtags": 50
   }
-};
+}
