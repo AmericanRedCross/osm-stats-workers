@@ -63,30 +63,9 @@ var badges = {
     name: 'Mapathoner',
     id: 13,
     tiers: {1: 5, 2: 20, 3: 50}
-  },
-  daysInRow: {
-    name: 'Consistency',
-    id: 14,
-    tiers: {1: 5, 2: 20, 3: 50}
-  },
-  daysTotal: {
-    name: 'Year Long Mapper',
-    id: 15,
-    tiers: {1: 25, 2: 50, 3: 100}
-  },
-  hotProjects: {
-    name: 'Crisis Mapping',
-    id: 16,
-    tiers: {1: 10}
-  },
-  rcProjects: {
-    name: 'Red Cross Mapper',
-    id: 17,
-    tiers: {1: 10}
-  },
-  msfProjects: {
-    name: 'MSF Mapper',
-    id: 18,
-    tiers: {1: 10}
   }
 };
+
+Object.keys(badges).forEach(function (key) {
+  console.log(key, badges[key]);
+});
