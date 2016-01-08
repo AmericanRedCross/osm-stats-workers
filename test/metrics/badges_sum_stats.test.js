@@ -9,9 +9,9 @@ var userWithTierTwoBadges = sumStats.user_with_tier2_badges;
 var userWithTierThreeBadges = sumStats.user_with_tier3_badges;
 
 tap.test('badge logic - sum metrics', function (t) {
-  t.equal(sumCheck(userWithNoBadges), {}, 'a user with all <level 1 metrics should return an empty object');
+  t.deepEqual(sumCheck(userWithNoBadges), {}, 'a user with all <level 1 metrics should return an empty object');
 
-  t.equal(sumCheck(userWithTierOneBadges), {
+  t.deepEqual(sumCheck(userWithTierOneBadges), {
     roads: 1,
     roadMods: 1,
     pois: 1,
@@ -27,7 +27,7 @@ tap.test('badge logic - sum metrics', function (t) {
     hashtags: 1
   }, 'a user with all level 1 metrics should return object of badge keys with all 1s');
 
-  t.equal(sumCheck(userWithTierTwoBadges), {
+  t.deepEqual(sumCheck(userWithTierTwoBadges), {
     roads: 2,
     roadMods: 2,
     pois: 2,
@@ -43,7 +43,7 @@ tap.test('badge logic - sum metrics', function (t) {
     hashtags: 2
   }, 'a user with all level 2 metrics should return object of badge keys with all 2s');
 
-  t.equal(sumCheck(userWithTierThreeBadges), {
+  t.deepEqual(sumCheck(userWithTierThreeBadges), {
     roads: 3,
     roadMods: 3,
     pois: 3,
