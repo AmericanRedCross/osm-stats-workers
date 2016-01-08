@@ -1,3 +1,5 @@
+// This is a placeholder for the object
+
 var badges = {
   hotProjects: {
     name: 'Crisis Mapping',

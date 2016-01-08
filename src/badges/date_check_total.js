@@ -1,3 +1,5 @@
+// this is a placeholder for the object
+
 var badges = {
   daysTotal: {
     name: 'Year Long Mapper',
