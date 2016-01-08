@@ -29,7 +29,7 @@ module.exports = function (dates) {
     return sorted;
   }
 
-  function checkBadge (sequentialDates, badge) {
+  function checkBadgeLevel (sequentialDates, badge) {
     for (var i = 0; i < sequentialDates.length; ++i) {
       var dayStreakLength = sequentialDates[i].length;
       if (dayStreakLength >= badge.tiers[1] && dayStreakLength < badge.tiers[2]) {
@@ -45,7 +45,7 @@ module.exports = function (dates) {
   }
 
   var sequentialDates = sequentializeDates(dates);
-  var badgeLevel = checkBadge(sequentialDates, badges.daysInRow);
+  var badgeLevel = checkBadgeLevel(sequentialDates, badges.daysInRow);
 
   var earnedBadges = {};
   if (badgeLevel !== null) {
