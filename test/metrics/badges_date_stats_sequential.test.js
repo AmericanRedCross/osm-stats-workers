@@ -12,8 +12,8 @@ tap.test('badge logic - sequential date metrics', function (t) {
   t.deepEqual(sequentialDateCheck(userWithNoBadges),
     {}, 'a user with <5 sequential dates should return an empty object');
 
-  t.deepEqual(sequentialDateCheck(userWithTierOneBadges).consistency,
-    1, 'a user with 5-19 sequential dates should return {consistency: 1}');
+  t.deepEqual(sequentialDateCheck(userWithTierOneBadges),
+    {consistency: 1}, 'a user with 5-19 sequential dates should return {consistency: 1}');
 
   t.deepEqual(sequentialDateCheck(userWithTierTwoBadges),
     {consistency: 2}, 'a user with 20-49 sequential dates should return {consistency: 2}');
