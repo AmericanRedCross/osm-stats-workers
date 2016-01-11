@@ -7,6 +7,9 @@ module.exports = function (dates) {
     }
   };
 
+  // function takes array of dates and returns an array of arrays
+  // containing each sequential date
+  // http://stackoverflow.com/questions/16690905/javascript-get-sequential-dates-in-array
   function sequentializeDates (dates) {
     var k = 0;
     var sorted = [];

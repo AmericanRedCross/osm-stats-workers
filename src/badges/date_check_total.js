@@ -1,3 +1,5 @@
+var R = require('ramda');
+
 module.exports = function (dates) {
   var badges = {
     daysTotal: {
@@ -6,16 +8,6 @@ module.exports = function (dates) {
       tiers: {1: 25, 2: 50, 3: 100}
     }
   };
-
-  function uniques (array) {
-    var uniques = [];
-    for (var i = 0; i < array.length; i++) {
-      if (uniques.indexOf(array[i]) === -1 && array[i] !== '') {
-        uniques.push(array[i]);
-      }
-    }
-    return uniques;
-  }
 
   function checkBadgeLevel (uniqueDates, badge) {
     var uniqueDatesLength = uniqueDates.length;
@@ -37,7 +29,7 @@ module.exports = function (dates) {
   });
 
   // Get unique dates and check badge level
-  var uniqueDates = uniques(dates);
+  var uniqueDates = R.uniq(dates);
   var badgeLevel = checkBadgeLevel(uniqueDates, badges.daysTotal);
 
   var earnedBadges = {};
