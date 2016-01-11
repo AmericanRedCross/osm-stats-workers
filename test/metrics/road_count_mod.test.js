@@ -16,7 +16,7 @@ tap.test('road_count', function (t) {
   // One created way
   t.equal(roadCountMod(oneCreatedWay), 0, 'one created way should return 0');
 
-  // One created way
-  t.equal(roadCountMod(oneCreatedTwoModifedWay), 2, 'one created two modified ways should return 2');
+  // Two modified ways
+  t.equal(roadCountMod(oneCreatedTwoModifedWay), 2, 'one created and two modified ways should return 2');
   t.end();
 });

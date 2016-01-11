@@ -12,8 +12,7 @@ tap.test('building_count', function (t) {
   // Untagged ways
   t.equal(buildingCount(untaggedChangeset), 0, 'untagged changeset should return 0');
 
-  // A created and a modified building should both count
-  // towards the building count
+  // Only created buildings should contribute to the count
   t.equal(buildingCount(threeBuildingChangeset), 1, 'one created and two modified buildings should return 1');
 
   t.end();
