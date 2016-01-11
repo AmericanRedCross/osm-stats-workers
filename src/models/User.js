@@ -1,6 +1,7 @@
 var bookshelf = require('../common/bookshelf_init');
 require('./Changeset');
 require('./Badge');
+require('./Hashtag');
 
 // Returns User model
 var User = bookshelf.Model.extend({
@@ -9,7 +10,10 @@ var User = bookshelf.Model.extend({
     return this.hasMany('Changeset');
   },
   badges: function () {
-    this.belongsToMany('Badge');
+    return this.belongsToMany('Badge');
+  },
+  hashtags: function () {
+    return this.hasMany('Hashtag').through('Changeset');
   }
 });
 
