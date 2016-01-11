@@ -40,6 +40,26 @@
         "lon": "0"
       }
       ]
+    },
+    {
+      "id": "-3",
+      "type": "way",
+      "action": "modify",
+      "tags": {
+        "highway": "yes"
+      },
+      "nodes": [
+      {
+        "ref": "-11",
+        "lat": "0",
+        "lon": "0"
+      },
+      {
+        "ref": "-12",
+        "lat": "1",
+        "lon": "1"
+      }
+      ]
     }
 
   ]
