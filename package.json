@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "npm run lint && tap test/*/*.test.js ",
-    "lint": "eslint index.js src/*"
+    "lint": "eslint index.js src/*",
+    "dbinit": "database_init.sh"
   },
   "author": "",
   "license": "ISC",
