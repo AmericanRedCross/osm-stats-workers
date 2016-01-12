@@ -1,24 +1,14 @@
 module.exports = function (data) {
   var badges = {
-    // roads: {
-    //   name: 'Road Builder',
-    //   id: 1,
-    //   tiers: {1: 100, 2: 500, 3: 1000}
-    // },
     roads: {
       name: 'Road Builder',
       id: 1,
-      tiers: {1: 1, 2: 2, 3: 1000}
+      tiers: {1: 100, 2: 500, 3: 1000}
     },
-    // roadMods: {
-    //   name: 'Road Maintainer',
-    //   id: 2,
-    //   tiers: {1: 100, 2: 500, 3: 1000}
-    // },
     roadMods: {
       name: 'Road Maintainer',
       id: 2,
-      tiers: {1: -1, 2: -2, 3: 0}
+      tiers: {1: 100, 2: 500, 3: 1000}
     },
     pois: {
       name: 'Point Creator',
@@ -99,6 +89,8 @@ module.exports = function (data) {
       earnedBadges[key] = {category: badge.id, level: badgeLevel};
     }
   });
+
+  console.log(earnedBadges);
 
   return earnedBadges;
 };

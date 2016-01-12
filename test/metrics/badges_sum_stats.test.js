@@ -12,51 +12,51 @@ tap.test('badge logic - sum metrics', function (t) {
   t.deepEqual(sumCheck(userWithNoBadges), {}, 'a user with all <level 1 metrics should return an empty object');
 
   t.deepEqual(sumCheck(userWithTierOneBadges), {
-    roads: 1,
-    roadMods: 1,
-    pois: 1,
-    buildings: 1,
-    gpsTraces: 1,
-    roadKms: 1,
-    roadKmMods: 1,
-    waterways: 1,
-    countries: 1,
-    tasks: 1,
-    taskEdits: 1,
-    josm: 1,
-    hashtags: 1
+    roads: { category: 1, level: 1 },
+    roadMods: { category: 2, level: 1 },
+    pois: { category: 3, level: 1 },
+    buildings: { category: 4, level: 1 },
+    gpsTraces: { category: 5, level: 1 },
+    roadKms: { category: 6, level: 1 },
+    roadKmMods: { category: 7, level: 1 },
+    waterways: { category: 8, level: 1 },
+    countries: { category: 9, level: 1 },
+    tasks: { category: 10, level: 1 },
+    taskEdits: { category: 11, level: 1 },
+    josm: { category: 12, level: 1 },
+    hashtags: { category: 13, level: 1 }
   }, 'a user with all level 1 metrics should return object of badge keys with all 1s');
 
   t.deepEqual(sumCheck(userWithTierTwoBadges), {
-    roads: 2,
-    roadMods: 2,
-    pois: 2,
-    buildings: 2,
-    gpsTraces: 2,
-    roadKms: 2,
-    roadKmMods: 2,
-    waterways: 2,
-    countries: 2,
-    tasks: 2,
-    taskEdits: 2,
-    josm: 2,
-    hashtags: 2
+    roads: { category: 1, level: 2 },
+    roadMods: { category: 2, level: 2 },
+    pois: { category: 3, level: 2 },
+    buildings: { category: 4, level: 2 },
+    gpsTraces: { category: 5, level: 2 },
+    roadKms: { category: 6, level: 2 },
+    roadKmMods: { category: 7, level: 2 },
+    waterways: { category: 8, level: 2 },
+    countries: { category: 9, level: 2 },
+    tasks: { category: 10, level: 2 },
+    taskEdits: { category: 11, level: 2 },
+    josm: { category: 12, level: 2 },
+    hashtags: { category: 13, level: 2 }
   }, 'a user with all level 2 metrics should return object of badge keys with all 2s');
 
   t.deepEqual(sumCheck(userWithTierThreeBadges), {
-    roads: 3,
-    roadMods: 3,
-    pois: 3,
-    buildings: 3,
-    gpsTraces: 3,
-    roadKms: 3,
-    roadKmMods: 3,
-    waterways: 3,
-    countries: 3,
-    tasks: 3,
-    taskEdits: 3,
-    josm: 3,
-    hashtags: 3
+    roads: { category: 1, level: 3 },
+    roadMods: { category: 2, level: 3 },
+    pois: { category: 3, level: 3 },
+    buildings: { category: 4, level: 3 },
+    gpsTraces: { category: 5, level: 3 },
+    roadKms: { category: 6, level: 3 },
+    roadKmMods: { category: 7, level: 3 },
+    waterways: { category: 8, level: 3 },
+    countries: { category: 9, level: 3 },
+    tasks: { category: 10, level: 3 },
+    taskEdits: { category: 11, level: 3 },
+    josm: { category: 12, level: 3 },
+    hashtags: { category: 13, level: 3 }
   }, 'a user with all level 3 metrics should return object of badge keys with all 3s');
 
   t.end();
