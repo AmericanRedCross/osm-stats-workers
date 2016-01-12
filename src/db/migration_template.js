@@ -67,6 +67,7 @@ exports.up = function (knex, Promise) {
       table.increments('id').primary();
       table.integer('user_id').references('users.id');
       table.integer('badge_id').references('badges.id');
+      table.timestamp('created_at');
     });
 };
 
