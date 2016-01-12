@@ -157,7 +157,11 @@ function addToDB (metrics) {
         changeset.hashtags().attach(hashtags, {transacting: t}),
         changeset.countries().attach(country, {transacting: t}),
         updateUserMetrics(user, metrics.metrics, t)
-      ]);
+      ])
+      .then(function (results) {
+        console.log(results[2])
+      })
+      ;
     });
     // .then(function () {
     //   // return User.forge({id: metrics.user.id}).getNumCountries(t);
