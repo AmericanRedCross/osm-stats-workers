@@ -78,7 +78,7 @@ function updateUserMetrics (user, metrics, transaction) {
 }
 
 function createUserIfNotExists (user, transaction) {
-  return User.where({id: user.id}).fetch().then(function (result) {
+  return User.where({id: user.id}).fetch({withRelated: 'badges'}).then(function (result) {
     if (!result) {
       return User.forge({
         id: user.id,
@@ -183,22 +183,22 @@ function updateBadges (user, metrics, transaction) {
     gpsTraces: user.attributes.total_poi_count_add,
     roadKms: user.attributes.total_road_km_add,
     roadKmMods: user.attributes.total_road_km_mod,
-    waterways: user.attributes.total_watererway_km_add
+    waterways: user.attributes.total_waterway_km_add
   });
-  return Promise.map(Object.keys(earnedBadges), function (badgeName) {
-    var badge = earnedBadges[badgeName];
+
+  var pickerFunction = R.pick(['category', 'level']);
+  var pickFromArray = R.map(pickerFunction);
+
+  var currentBadges = user.related('badges').toJSON();
+  var earnedBadgeLevels = pickFromArray(R.values(earnedBadges));
+  var currentBadgeLevels = pickFromArray(currentBadges);
+  var newBadges = R.difference(earnedBadgeLevels, currentBadgeLevels);
+
+  return Promise.map(newBadges, function (badge) {
     return Badge.where({category: badge.category, level: badge.level}).fetch()
-    //
-    //
-    //
-    // This adds duplicate entries to the junction table
-    // and must be fixed
-    //
-    //
-    //
-      .then(function (badge) {
-        return user.badges().attach(badge, {transacting: transaction});
-      });
+    .then(function (badge) {
+      return user.badges().attach(badge, {transacting: transaction});
+    });
   });
 }
 
