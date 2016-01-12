@@ -63,10 +63,11 @@ exports.up = function (knex, Promise) {
       table.integer('level');
       table.timestamp('created_at');
     })
-    .createTable('users_badges', function (table) {
+    .createTable('badges_users', function (table) {
       table.increments('id').primary();
       table.integer('user_id').references('users.id');
       table.integer('badge_id').references('badges.id');
+      table.timestamp('created_at').defaultTo(knex.raw('now()'));
     });
 };
 

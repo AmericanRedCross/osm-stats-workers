@@ -8,6 +8,8 @@ var changeset = JSON.parse(fs.readFileSync('./test/fixtures/example.json', 'utf8
 var metrics = calculateMetrics(changeset);
 var hashtags = getHashtags(changeset.metadata.comment);
 
+var sumCheck = require('./src/badges/sum_check');
+
 var changeset2 = R.clone(changeset);
 changeset2.metadata.id = 12345;
 var metrics2 = calculateMetrics(changeset2);
@@ -16,6 +18,7 @@ var User = require('./src/models/User');
 var Changeset = require('./src/models/Changeset');
 var Hashtag = require('./src/models/Hashtag');
 var Country = require('./src/models/Country');
+var Badge = require('./src/models/Badge');
 
 function createChangesetIfNotExists (metrics, transaction) {
   return Changeset.where({id: metrics.id}).fetch().then(function (result) {
@@ -46,7 +49,6 @@ function createChangesetIfNotExists (metrics, transaction) {
 }
 
 function updateUserMetrics (user, metrics, transaction) {
-  console.log(user.attributes);
   return user.save({
     total_road_count_add:
       user.attributes.total_road_count_add + metrics.road_count,
@@ -157,11 +159,11 @@ function addToDB (metrics) {
         changeset.hashtags().attach(hashtags, {transacting: t}),
         changeset.countries().attach(country, {transacting: t}),
         updateUserMetrics(user, metrics.metrics, t)
-      ])
-      .then(function (results) {
-        console.log(results[2])
-      })
-      ;
+      ]);
+    })
+    .then(function (results) {
+      var user = results[2];
+      return updateBadges(user, metrics.metrics, t);
     });
     // .then(function () {
     //   // return User.forge({id: metrics.user.id}).getNumCountries(t);
@@ -169,6 +171,34 @@ function addToDB (metrics) {
   })
   .catch(function (err) {
     console.error('Error', err);
+  });
+}
+
+function updateBadges (user, metrics, transaction) {
+  var earnedBadges = sumCheck({
+    roads: user.attributes.total_road_count_add,
+    roadMods: user.attributes.total_road_count_mod,
+    buildings: user.attributes.total_building_count_add,
+    pois: user.attributes.total_poi_count_add,
+    gpsTraces: user.attributes.total_poi_count_add,
+    roadKms: user.attributes.total_road_km_add,
+    roadKmMods: user.attributes.total_road_km_mod,
+    waterways: user.attributes.total_watererway_km_add
+  });
+  return Promise.map(Object.keys(earnedBadges), function (badgeName) {
+    var badge = earnedBadges[badgeName];
+    return Badge.where({category: badge.category, level: badge.level}).fetch()
+    //
+    //
+    //
+    // This adds duplicate entries to the junction table
+    // and must be fixed
+    //
+    //
+    //
+      .then(function (badge) {
+        return user.badges().attach(badge, {transacting: transaction});
+      });
   });
 }
 
