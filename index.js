@@ -1,3 +1,4 @@
+require('string.prototype.startswith');
 var fs = require('fs');
 var bookshelf = require('./src/common/bookshelf_init');
 var R = require('ramda');
