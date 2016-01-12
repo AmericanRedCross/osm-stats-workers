@@ -1,10 +1,8 @@
-require('string.prototype.startswith');
-
 var fs = require('fs');
 var bookshelf = require('./src/common/bookshelf_init');
 var R = require('ramda');
-var Promise = require('bluebird');
 var calculateMetrics = require('./src/calculate_metrics');
+var Promise = require('bluebird');
 
 var changeset = JSON.parse(fs.readFileSync('./test/fixtures/example.json', 'utf8'));
 var metrics = calculateMetrics(changeset);
@@ -36,7 +34,7 @@ function createChangesetIfNotExists (metrics, transaction) {
         created_at: new Date(metrics.created_at)
       }).save(null, {method: 'insert', transacting: transaction});
     } else {
-      return result;
+      throw new Error('Changeset exists');
     }
   });
 }
@@ -110,12 +108,17 @@ function addToDB (metrics) {
         changeset.countries().attach(country, {transacting: t})
       ]);
     })
-    .catch(function (err) {
-      console.error(err);
+    .then(function () {
+      return User.forge({id: metrics.user.id}).getNumCountries(t);
     });
+  })
+  .catch(function (err) {
+    console.error('Error', err);
   });
 }
 
 addToDB(metrics).then(function (results) {
   console.log(results);
+}).finally(function () {
+  bookshelf.knex.destroy();
 });
