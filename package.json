@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "npm run lint && tap test/*/*.test.js ",
-    "lint": "eslint ."
+    "lint": "eslint index.js src/*",
+    "dbinit": "./bin/database_init.sh"
   },
   "author": "",
   "license": "ISC",
@@ -21,7 +22,6 @@
     "npm": "^3.5.2",
     "pg": "^4.4.3",
     "ramda": "^0.19.0",
-    "string.prototype.startswith": "^0.2.0",
     "turf": "^2.0.2"
   },
   "devDependencies": {
