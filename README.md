@@ -16,9 +16,22 @@ knex migrate:latest
 
 from the src/db/migrations directory.
 
-Timestamped migration templates can be generated using
+Additional timestamped migration templates can be generated using
 ```
 knex migrate:make migration_name
 ```
 
-and the src/db/migration_template.js contains the current snapshot of the schema.
+The database includes seed data which is necessary for proper operation of the workers. To seed the database, run
+```
+knex migrate:latest
+```
+
+from the src/db/migrations directory.
+
+
+For testing purposes, the database can be completely removed, rebuilt and reseeded by running
+```
+npm run dbinit
+```
+
+from the project's root directory.

@@ -1,9 +1,11 @@
 #!/bin/bash
 
-dropdb missingmaps
+if dropdb missingmaps
+  then
+    echo "Dropping and rebuilding missingmaps DB."
+  else
+    echo "missingmaps DB does not exist. Building a new one."
+fi
 createdb missingmaps
-cd src/db/migrations
-knex migrate:latest
-cd seeds
-knex seed:run
-cd ../../../..
+knex migrate:latest --cwd ./src/db/migrations/
+knex seed:run --cwd ./src/db/migrations/
