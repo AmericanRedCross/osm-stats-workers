@@ -43,9 +43,9 @@ module.exports = function (changeset, precision) {
       building_count_mod: buildingCountMod(changeset),
       waterway_count: waterwayCount(changeset),
       poi_count: poiCount(changeset),
-      road_km: ~~(roadLength(changeset) * 100000),
-      road_km_mod: ~~(roadLengthMod(changeset) * 100000),
-      waterway_km: ~~(waterwayLength(changeset) * 100000)
+      road_km: roadLength(changeset),
+      road_km_mod: roadLengthMod(changeset),
+      waterway_km: waterwayLength(changeset)
       // todo: add GPS trace lookup; placeholder functions return 0
     },
     editor: metadata.created_by,

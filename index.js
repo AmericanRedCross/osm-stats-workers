@@ -1,4 +1,3 @@
-require('string.prototype.startswith');
 var fs = require('fs');
 var bookshelf = require('./src/common/bookshelf_init');
 var R = require('ramda');
@@ -9,6 +8,8 @@ var metrics = calculateMetrics(changeset);
 var hashtags = getHashtags(changeset.metadata.comment);
 
 var sumCheck = require('./src/badges/sum_check');
+var dateSequentialCheck = require('./src/badges/date_check_sequential');
+var dateTotalCheck = require('./src/badges/date_check_total.js');
 
 var changeset2 = R.clone(changeset);
 changeset2.metadata.id = 12345;
@@ -51,26 +52,26 @@ function createChangesetIfNotExists (metrics, transaction) {
 function updateUserMetrics (user, metrics, transaction) {
   return user.save({
     total_road_count_add:
-      user.attributes.total_road_count_add + metrics.road_count,
+      Number(user.attributes.total_road_count_add) + Number(metrics.road_count),
     total_road_count_mod:
-      user.attributes.total_road_count_mod + metrics.road_count_mod,
+      Number(user.attributes.total_road_count_mod) + Number(metrics.road_count_mod),
     total_building_count_add:
-      user.attributes.total_building_count_add + metrics.building_count,
+      Number(user.attributes.total_building_count_add) + Number(metrics.building_count),
     total_building_count_mod:
-      user.attributes.total_building_count_mod + metrics.building_count_mod,
+      Number(user.attributes.total_building_count_mod) + Number(metrics.building_count_mod),
     total_waterway_count_add:
-      user.attributes.total_waterway_count_add + metrics.waterway_count,
+      Number(user.attributes.total_waterway_count_add) + Number(metrics.waterway_count),
     total_poi_count_add:
-      user.attributes.total_poi_count_add + metrics.poi_count,
+      Number(user.attributes.total_poi_count_add) + Number(metrics.poi_count),
     // GPS trace not yet implemented
     total_gpstrace_count_add:
       0,
     total_road_km_add:
-      user.attributes.total_road_km_add + metrics.road_km,
+      Number(user.attributes.total_road_km_add) + Number(metrics.road_km),
     total_road_km_mod:
-      user.attributes.total_road_km_mod + metrics.road_km_mod,
+      Number(user.attributes.total_road_km_mod) + Number(metrics.road_km_mod),
     total_waterway_km_add:
-      user.attributes.total_waterway_km_add + metrics.waterway_km,
+      Number(user.attributes.total_waterway_km_add) + Number(metrics.waterway_km),
     // GPS trace not yet implemented
     total_gpstrace_km_add:
       0
@@ -163,11 +164,20 @@ function addToDB (metrics) {
     })
     .then(function (results) {
       var user = results[2];
-      return updateBadges(user, metrics.metrics, t);
+      return Promise.all([
+        user.getNumCountries(t),
+        user.getHashtags(t),
+        user.getTimestamps(t)
+      ]).then(function (additionalMetrics) {
+        var numCountries = additionalMetrics[0];
+        var hashtags = additionalMetrics[1];
+        var timestamps = additionalMetrics[2];
+        metrics.metrics.numCountries = numCountries;
+        metrics.metrics.hashtags = hashtags;
+        metrics.metrics.timestamps = timestamps;
+        return updateBadges(user, metrics.metrics, t);
+      });
     });
-    // .then(function () {
-    //   // return User.forge({id: metrics.user.id}).getNumCountries(t);
-    // });
   })
   .catch(function (err) {
     console.error('Error', err);
@@ -175,7 +185,7 @@ function addToDB (metrics) {
 }
 
 function updateBadges (user, metrics, transaction) {
-  var earnedBadges = sumCheck({
+  var sumBadges = sumCheck({
     roads: user.attributes.total_road_count_add,
     roadMods: user.attributes.total_road_count_mod,
     buildings: user.attributes.total_building_count_add,
@@ -185,6 +195,11 @@ function updateBadges (user, metrics, transaction) {
     roadKmMods: user.attributes.total_road_km_mod,
     waterways: user.attributes.total_waterway_km_add
   });
+  var consistencyBadge = dateSequentialCheck(metrics.timestamps);
+  var historyBadge = dateTotalCheck(metrics.timestamps);
+  var earnedBadges = R.mergeAll([
+    sumBadges, consistencyBadge, historyBadge
+  ])
 
   var pickerFunction = R.pick(['category', 'level']);
   var pickFromArray = R.map(pickerFunction);
@@ -193,6 +208,7 @@ function updateBadges (user, metrics, transaction) {
   var earnedBadgeLevels = pickFromArray(R.values(earnedBadges));
   var currentBadgeLevels = pickFromArray(currentBadges);
   var newBadges = R.difference(earnedBadgeLevels, currentBadgeLevels);
+
 
   return Promise.map(newBadges, function (badge) {
     return Badge.where({category: badge.category, level: badge.level}).fetch()
@@ -205,7 +221,7 @@ function updateBadges (user, metrics, transaction) {
 addToDB(metrics).then(function (results) {
   return addToDB(metrics2);
 }).then(function (results) {
-  console.log(results);
+  // console.log(results);
 }).finally(function () {
   bookshelf.knex.destroy();
 });

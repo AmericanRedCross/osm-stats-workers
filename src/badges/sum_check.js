@@ -90,7 +90,5 @@ module.exports = function (data) {
     }
   });
 
-  console.log(earnedBadges);
-
   return earnedBadges;
 };
