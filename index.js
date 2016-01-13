@@ -1,19 +1,12 @@
-var fs = require('fs');
-var bookshelf = require('./src/common/bookshelf_init');
-var R = require('ramda');
-var calculateMetrics = require('./src/calculate_metrics');
 var Promise = require('bluebird');
-var changeset = JSON.parse(fs.readFileSync('./test/fixtures/example.json', 'utf8'));
-var metrics = calculateMetrics(changeset);
-var hashtags = getHashtags(changeset.metadata.comment);
+var R = require('ramda');
+
+var bookshelf = require('./src/common/bookshelf_init');
+var calculateMetrics = require('./src/calculate_metrics');
 
 var sumCheck = require('./src/badges/sum_check');
 var dateSequentialCheck = require('./src/badges/date_check_sequential');
 var dateTotalCheck = require('./src/badges/date_check_total.js');
-
-var changeset2 = R.clone(changeset);
-changeset2.metadata.id = 12345;
-var metrics2 = calculateMetrics(changeset2);
 
 var User = require('./src/models/User');
 var Changeset = require('./src/models/Changeset');
@@ -75,7 +68,7 @@ function updateUserMetrics (user, metrics, transaction) {
     // GPS trace not yet implemented
     total_gpstrace_km_add:
       0
-  }, {transacting: transaction});
+  }, {method: 'update', transacting: transaction});
 }
 
 function createUserIfNotExists (user, transaction) {
@@ -143,7 +136,43 @@ function lookupCountry (country) {
   return Country.where({name: country}).fetch();
 }
 
-function addToDB (metrics) {
+function updateBadges (user, metrics, transaction) {
+  var sumBadges = sumCheck({
+    roads: user.attributes.total_road_count_add,
+    roadMods: user.attributes.total_road_count_mod,
+    buildings: user.attributes.total_building_count_add,
+    pois: user.attributes.total_poi_count_add,
+    gpsTraces: user.attributes.total_poi_count_add,
+    roadKms: user.attributes.total_road_km_add,
+    roadKmMods: user.attributes.total_road_km_mod,
+    waterways: user.attributes.total_waterway_km_add
+  });
+  var consistencyBadge = dateSequentialCheck(metrics.timestamps);
+  var historyBadge = dateTotalCheck(metrics.timestamps);
+  var earnedBadges = R.mergeAll([
+    sumBadges, consistencyBadge, historyBadge
+  ]);
+
+  var pickerFunction = R.pick(['category', 'level']);
+  var pickFromArray = R.map(pickerFunction);
+
+  var currentBadges = user.related('badges').toJSON();
+  var earnedBadgeLevels = pickFromArray(R.values(earnedBadges));
+  var currentBadgeLevels = pickFromArray(currentBadges);
+  var newBadges = R.difference(earnedBadgeLevels, currentBadgeLevels);
+
+  return Promise.map(newBadges, function (badge) {
+    return Badge.where({category: badge.category, level: badge.level}).fetch()
+    .then(function (badge) {
+      return user.badges().attach(badge, {transacting: transaction});
+    });
+  });
+}
+
+module.exports = function (changeset) {
+  var metrics = calculateMetrics(changeset);
+  var hashtags = getHashtags(changeset.metadata.comment);
+
   return bookshelf.transaction(function (t) {
     return Promise.all([
       createUserIfNotExists(metrics.user, t),
@@ -180,47 +209,9 @@ function addToDB (metrics) {
     });
   })
   .catch(function (err) {
-    console.error('Error', err);
+    throw new Error(err);
+  })
+  .finally(function () {
+    bookshelf.knex.destroy();
   });
-}
-
-function updateBadges (user, metrics, transaction) {
-  var sumBadges = sumCheck({
-    roads: user.attributes.total_road_count_add,
-    roadMods: user.attributes.total_road_count_mod,
-    buildings: user.attributes.total_building_count_add,
-    pois: user.attributes.total_poi_count_add,
-    gpsTraces: user.attributes.total_poi_count_add,
-    roadKms: user.attributes.total_road_km_add,
-    roadKmMods: user.attributes.total_road_km_mod,
-    waterways: user.attributes.total_waterway_km_add
-  });
-  var consistencyBadge = dateSequentialCheck(metrics.timestamps);
-  var historyBadge = dateTotalCheck(metrics.timestamps);
-  var earnedBadges = R.mergeAll([
-    sumBadges, consistencyBadge, historyBadge
-  ]);
-
-  var pickerFunction = R.pick(['category', 'level']);
-  var pickFromArray = R.map(pickerFunction);
-
-  var currentBadges = user.related('badges').toJSON();
-  var earnedBadgeLevels = pickFromArray(R.values(earnedBadges));
-  var currentBadgeLevels = pickFromArray(currentBadges);
-  var newBadges = R.difference(earnedBadgeLevels, currentBadgeLevels);
-
-  return Promise.map(newBadges, function (badge) {
-    return Badge.where({category: badge.category, level: badge.level}).fetch()
-    .then(function (badge) {
-      return user.badges().attach(badge, {transacting: transaction});
-    });
-  });
-}
-
-addToDB(metrics).then(function (results) {
-  return addToDB(metrics2);
-}).then(function (results) {
-  // console.log(results);
-}).finally(function () {
-  bookshelf.knex.destroy();
-});
+};
