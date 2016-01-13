@@ -199,7 +199,7 @@ function updateBadges (user, metrics, transaction) {
   var historyBadge = dateTotalCheck(metrics.timestamps);
   var earnedBadges = R.mergeAll([
     sumBadges, consistencyBadge, historyBadge
-  ])
+  ]);
 
   var pickerFunction = R.pick(['category', 'level']);
   var pickFromArray = R.map(pickerFunction);
@@ -208,7 +208,6 @@ function updateBadges (user, metrics, transaction) {
   var earnedBadgeLevels = pickFromArray(R.values(earnedBadges));
   var currentBadgeLevels = pickFromArray(currentBadges);
   var newBadges = R.difference(earnedBadgeLevels, currentBadgeLevels);
-
 
   return Promise.map(newBadges, function (badge) {
     return Badge.where({category: badge.category, level: badge.level}).fetch()

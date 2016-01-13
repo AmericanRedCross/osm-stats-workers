@@ -49,7 +49,7 @@ var User = bookshelf.Model.extend({
     .where('changeset_id', 'in', subquery)
     .then(function (results) {
       return R.uniq(R.map(R.prop('hashtag'), results));
-    })
+    });
   },
   getTimestamps: function (trx) {
     // Check if we're in a transaction
