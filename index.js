@@ -1,5 +1,6 @@
 var Promise = require('bluebird');
 var R = require('ramda');
+var turf = require('turf');
 
 var bookshelf = require('./src/common/bookshelf_init');
 var calculateMetrics = require('./src/calculate_metrics');
@@ -42,8 +43,17 @@ function createChangesetIfNotExists (metrics, transaction) {
   });
 }
 
-function updateUserMetrics (user, metrics, transaction) {
+function mergeExtents (extent1, extent2) {
+  return turf.merge({
+    'type': 'FeatureCollection',
+    'features': [extent1, extent2]
+  });
+}
+
+function updateUserMetrics (user, metrics, newExtent, transaction) {
   return user.save({
+    geo_extent:
+      mergeExtents(user.attributes.geo_extent, newExtent),
     total_road_count_add:
       Number(user.attributes.total_road_count_add) + Number(metrics.road_count),
     total_road_count_mod:
@@ -95,9 +105,7 @@ function createUserIfNotExists (user, transaction) {
         created_at: new Date()
       }).save(null, {method: 'insert', transacting: transaction});
     } else {
-      return result.save({
-        geo_extent: user.geo_extent
-      });
+      return result;
     }
   });
 }
@@ -188,7 +196,7 @@ module.exports = function (changeset) {
       return Promise.all([
         changeset.hashtags().attach(hashtags, {transacting: t}),
         changeset.countries().attach(country, {transacting: t}),
-        updateUserMetrics(user, metrics.metrics, t)
+        updateUserMetrics(user, metrics.metrics, metrics.user.geo_extent, t)
       ]);
     })
     .then(function (results) {
