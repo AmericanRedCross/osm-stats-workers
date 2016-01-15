@@ -8,6 +8,5 @@ module.exports = require('knex')({
     user: 'postgres',
     password: '',
     database: 'missingmaps'
-  },
-  debug: true
+  }
 });

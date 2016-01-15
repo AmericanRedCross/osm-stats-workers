@@ -142,7 +142,6 @@ function updateBadges (user, metrics, transaction) {
     roadMods: user.attributes.total_road_count_mod,
     buildings: user.attributes.total_building_count_add,
     pois: user.attributes.total_poi_count_add,
-    gpsTraces: user.attributes.total_poi_count_add,
     roadKms: user.attributes.total_road_km_add,
     roadKmMods: user.attributes.total_road_km_mod,
     waterways: user.attributes.total_waterway_km_add
@@ -186,7 +185,8 @@ Worker.prototype.addToDB = function (changeset) {
     metrics = calculateMetrics(changeset);
   } catch (e) {
     component.logger(e);
-    fs.writeFileSync(`error_${changeset.metadata.id}.json`, JSON.stringify(JSON));
+    console.log('writing file');
+    fs.writeFileSync(`../../test/fixtures/simulator/error_${changeset.metadata.id}.json`, JSON.stringify(changeset));
   }
   var hashtags = getHashtags(changeset.metadata.comment);
 

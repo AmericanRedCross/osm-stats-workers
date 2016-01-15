@@ -1,8 +1,9 @@
 var env = require('./local.env.js');
 var AWS = require('aws-sdk');
 var Worker = require('../../');
-var worker = new Worker(function (err) {
+var worker = new Worker(function (err, changeset) {
   console.error(err);
+  console.log(changeset);
 });
 
 var kinesis = new AWS.Kinesis({
