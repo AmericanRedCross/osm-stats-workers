@@ -34,7 +34,7 @@ module.exports = function (dates) {
 
   var earnedBadges = {};
   if (badgeLevel !== null) {
-    earnedBadges['yearlongmapper'] = badgeLevel;
+    earnedBadges['yearlongmapper'] = {category: 15, level: badgeLevel};
   }
 
   return earnedBadges;

@@ -34,14 +34,20 @@ module.exports = function (bufferDistance) {
     // it will unnsuccessfully attempt a union of the two types.
     // The workaround is to buffer each type individually and merge the polygons...
     // Buffer and merge features
-    var merged = turf.merge({
-      'type': 'FeatureCollection',
-      'features': [
-        turf.buffer(multiLine, bufferDistance, 'meters').features[0],
-        turf.buffer(multiPolygon, bufferDistance, 'meters').features[0],
-        turf.buffer(multiPoint, bufferDistance, 'meters').features[0]
-      ]
-    });
+    var fc = turf.featurecollection([]);
+    if (multiLine.length) {
+      var multiLineBuffer = turf.buffer(multiLine, bufferDistance, 'meters').features[0];
+      fc.features.push(multiLineBuffer);
+    }
+    if (multiPolygon.length) {
+      var multiPolygonBuffer = turf.buffer(multiPolygon, bufferDistance, 'meters').features[0];
+      fc.features.push(multiPolygonBuffer);
+    }
+    if (multiPoint.length) {
+      var multiPointBuffer = turf.buffer(multiPoint, bufferDistance, 'meters').features[0];
+      fc.features.push(multiPointBuffer);
+    }
+    var merged = turf.merge(fc);
 
     // Return merged dataset with reduced geographic precision
     return gjp.parse(merged, 6);

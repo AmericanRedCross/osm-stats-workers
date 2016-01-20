@@ -52,7 +52,7 @@ module.exports = function (dates) {
 
   var earnedBadges = {};
   if (badgeLevel !== null) {
-    earnedBadges['consistency'] = badgeLevel;
+    earnedBadges['consistency'] = {category: 14, level: badgeLevel};
   }
 
   return earnedBadges;
