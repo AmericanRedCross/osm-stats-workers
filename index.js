@@ -1,5 +1,4 @@
 var Promise = require('bluebird');
-var fs = require('fs');
 var R = require('ramda');
 
 var calculateMetrics = require('./src/calculate_metrics');
@@ -169,6 +168,7 @@ function updateBadges (user, metrics, transaction) {
 }
 
 var Worker = function (loggingFn) {
+  var loggingFn = loggingFn || function (data) { console.log('>', data); }
   this.bookshelf = require('./src/common/bookshelf_init');
   this.logger = loggingFn;
 };
@@ -185,8 +185,7 @@ Worker.prototype.addToDB = function (changeset) {
     metrics = calculateMetrics(changeset);
   } catch (e) {
     component.logger(e);
-    console.log('writing file');
-    fs.writeFileSync(`../../test/fixtures/simulator/error_${changeset.metadata.id}.json`, JSON.stringify(changeset));
+    return Promise.reject(e);
   }
   var hashtags = getHashtags(changeset.metadata.comment);
 
@@ -228,10 +227,10 @@ Worker.prototype.addToDB = function (changeset) {
   })
   .catch(function (err) {
     component.logger(err, changeset);
+    return Promise.reject(err);
   })
   .finally(function () {
   });
 };
 
 module.exports = Worker;
-
