@@ -1,6 +1,6 @@
 var Promise = require('bluebird');
 var R = require('ramda');
-var turf = require('turf');
+var mergeExtents = require('./src/common/merge_extents.js');
 
 var calculateMetrics = require('./src/calculate_metrics');
 
@@ -39,13 +39,6 @@ function createChangesetIfNotExists (metrics, transaction) {
     } else {
       throw new Error('Changeset exists');
     }
-  });
-}
-
-function mergeExtents (extent1, extent2) {
-  return turf.merge({
-    'type': 'FeatureCollection',
-    'features': [extent1, extent2]
   });
 }
 
