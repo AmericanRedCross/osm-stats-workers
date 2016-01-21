@@ -2,7 +2,6 @@ var Promise = require('bluebird');
 var R = require('ramda');
 var turf = require('turf');
 
-var bookshelf = require('./src/common/bookshelf_init');
 var calculateMetrics = require('./src/calculate_metrics');
 
 var sumCheck = require('./src/badges/sum_check');
@@ -150,7 +149,6 @@ function updateBadges (user, metrics, transaction) {
     roadMods: user.attributes.total_road_count_mod,
     buildings: user.attributes.total_building_count_add,
     pois: user.attributes.total_poi_count_add,
-    gpsTraces: user.attributes.total_poi_count_add,
     roadKms: user.attributes.total_road_km_add,
     roadKmMods: user.attributes.total_road_km_mod,
     waterways: user.attributes.total_waterway_km_add
@@ -177,49 +175,70 @@ function updateBadges (user, metrics, transaction) {
   });
 }
 
-module.exports = function (changeset) {
-  var metrics = calculateMetrics(changeset);
+var Worker = function (loggingFn) {
+  loggingFn = loggingFn || function (data) { console.log('>', data); };
+  this.bookshelf = require('./src/common/bookshelf_init');
+  this.logger = loggingFn;
+};
+
+Worker.prototype.destroy = function () {
+  this.bookshelf.knex.destroy();
+};
+
+Worker.prototype.addToDB = function (changeset) {
+  this.changeset = changeset;
+  var component = this;
+  var metrics = {};
+  try {
+    metrics = calculateMetrics(changeset);
+  } catch (e) {
+    component.logger(e);
+    return Promise.reject(e);
+  }
   var hashtags = getHashtags(changeset.metadata.comment);
 
-  return bookshelf.transaction(function (t) {
-    return Promise.all([
-      createUserIfNotExists(metrics.user, t),
-      createChangesetIfNotExists(metrics, t),
-      createHashtags(hashtags, t),
-      lookupCountry(metrics.country, t)
-    ])
-    .then(function (results) {
-      var user = results[0];
-      var changeset = results[1];
-      var hashtags = results[2];
-      var country = results[3];
+  return this.bookshelf.transaction(function (t) {
+    return createUserIfNotExists(metrics.user, t)
+    .then(function (user) {
       return Promise.all([
-        changeset.hashtags().attach(hashtags, {transacting: t}),
-        changeset.countries().attach(country, {transacting: t}),
-        updateUserMetrics(user, metrics.metrics, metrics.user.geo_extent, t)
-      ]);
-    })
-    .then(function (results) {
-      var user = results[2];
-      return Promise.all([
-        user.getNumCountries(t),
-        user.getHashtags(t),
-        user.getTimestamps(t)
-      ]).then(function (additionalMetrics) {
-        var numCountries = additionalMetrics[0];
-        var hashtags = additionalMetrics[1];
-        var timestamps = additionalMetrics[2];
-        metrics.metrics.numCountries = numCountries;
-        metrics.metrics.hashtags = hashtags;
-        metrics.metrics.timestamps = timestamps;
-        return updateBadges(user, metrics.metrics, t);
+        createChangesetIfNotExists(metrics, t),
+        createHashtags(hashtags, t),
+        lookupCountry(metrics.country, t)
+      ])
+      .then(function (results) {
+        var changeset = results[0];
+        var hashtags = results[1];
+        var country = results[2];
+        return Promise.all([
+          changeset.hashtags().attach(hashtags, {transacting: t}),
+          changeset.countries().attach(country, {transacting: t}),
+          updateUserMetrics(user, metrics.metrics, metrics.user.geo_extent, t)
+        ]);
+      })
+      .then(function (results) {
+        var user = results[2];
+        return Promise.all([
+          user.getNumCountries(t),
+          user.getHashtags(t),
+          user.getTimestamps(t)
+        ]).then(function (additionalMetrics) {
+          var numCountries = additionalMetrics[0];
+          var hashtags = additionalMetrics[1];
+          var timestamps = additionalMetrics[2];
+          metrics.metrics.numCountries = numCountries;
+          metrics.metrics.hashtags = hashtags;
+          metrics.metrics.timestamps = timestamps;
+          return updateBadges(user, metrics.metrics, t);
+        });
       });
     });
   })
   .catch(function (err) {
-    throw new Error(err);
+    component.logger(err, changeset);
+    return Promise.reject(err);
   })
   .finally(function () {
-    bookshelf.knex.destroy();
   });
 };
+
+module.exports = Worker;

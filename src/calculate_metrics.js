@@ -16,7 +16,7 @@ var extentBuffer = require('./metrics/geo_extent_buffer');
 
 module.exports = function (changeset, precision) {
   var metadata = changeset.metadata;
-  precision = precision || 'hull';
+  precision = precision || 'buffer';
   var geoExtentFunc = {};
   if (precision === 'hull') {
     geoExtentFunc = extentCvHull;
