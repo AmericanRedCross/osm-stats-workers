@@ -33,44 +33,35 @@ Worker.prototype.addToDB = function (changeset) {
   return this.bookshelf.transaction(function (t) {
     return User.createUserIfNotExists(metrics.user, t)
     .then(function (user) {
-      return Promise.all([
+      return Promise.join(
         Changeset.createChangesetIfNotExists(metrics, t),
         Hashtag.createHashtags(hashtags, t),
-        Country.where({name: metrics.country}).fetch({transacting: t})
-      ])
-      .then(function (results) {
-        var changeset = results[0];
-        var hashtags = results[1];
-        var country = results[2];
-        return Promise.all([
-          changeset.hashtags().attach(hashtags, {transacting: t}),
-          changeset.countries().attach(country, {transacting: t}),
-          user.updateUserMetrics(metrics.metrics, metrics.user.geo_extent, t)
-        ]);
-      })
-      .then(function (results) {
-        var user = results[2];
-        return Promise.all([
-          user.getNumCountries(t),
-          user.getHashtags(t),
-          user.getTimestamps(t)
-        ]).then(function (additionalMetrics) {
-          var numCountries = additionalMetrics[0];
-          var hashtags = additionalMetrics[1];
-          var timestamps = additionalMetrics[2];
-          metrics.metrics.numCountries = numCountries;
-          metrics.metrics.hashtags = hashtags;
-          metrics.metrics.timestamps = timestamps;
-          return user.updateBadges(metrics.metrics, t);
+        Country.where({name: metrics.country}).fetch({transacting: t}),
+        function (changeset, hashtags, country) {
+          return Promise.all([
+            changeset.hashtags().attach(hashtags, {transacting: t}),
+            changeset.countries().attach(country, {transacting: t}),
+            user.updateUserMetrics(metrics.metrics, metrics.user.geo_extent, t)
+          ]);
+        })
+        .then(function (results) {
+          var user = results[2];
+          return Promise.join(
+            user.getNumCountries(t),
+            user.getHashtags(t),
+            user.getTimestamps(t),
+            function (numCountries, hashtags, timestamps) {
+              metrics.metrics.numCountries = numCountries;
+              metrics.metrics.hashtags = hashtags;
+              metrics.metrics.timestamps = timestamps;
+              return user.updateBadges(metrics.metrics, t);
+            });
         });
-      });
     });
   })
   .catch(function (err) {
     component.logger(err, changeset);
     return Promise.reject(err);
-  })
-  .finally(function () {
   });
 };
 

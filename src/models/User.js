@@ -1,10 +1,11 @@
 var R = require('ramda');
 var bookshelf = require('../common/bookshelf_init');
 var mergeExtents = require('../common/merge_extents.js');
-var sumCheck = require('./src/badges/sum_check');
-var dateSequentialCheck = require('./src/badges/date_check_sequential');
-var dateTotalCheck = require('./src/badges/date_check_total.js');
+var sumCheck = require('../badges/sum_check');
+var dateSequentialCheck = require('../badges/date_check_sequential');
+var dateTotalCheck = require('../badges/date_check_total.js');
 var Badge = require('./Badge.js');
+var Promise = require('bluebird');
 
 require('./Changeset');
 require('./Badge');

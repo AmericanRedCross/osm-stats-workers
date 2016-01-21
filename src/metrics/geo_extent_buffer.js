@@ -35,15 +35,16 @@ module.exports = function (bufferDistance) {
     // The workaround is to buffer each type individually and merge the polygons...
     // Buffer and merge features
     var fc = turf.featurecollection([]);
-    if (multiLine.length) {
+
+    if (multiLine.geometry.coordinates.length) {
       var multiLineBuffer = turf.buffer(multiLine, bufferDistance, 'meters').features[0];
       fc.features.push(multiLineBuffer);
     }
-    if (multiPolygon.length) {
+    if (multiPolygon.geometry.coordinates.length) {
       var multiPolygonBuffer = turf.buffer(multiPolygon, bufferDistance, 'meters').features[0];
       fc.features.push(multiPolygonBuffer);
     }
-    if (multiPoint.length) {
+    if (multiPoint.geometry.coordinates.length) {
       var multiPointBuffer = turf.buffer(multiPoint, bufferDistance, 'meters').features[0];
       fc.features.push(multiPointBuffer);
     }

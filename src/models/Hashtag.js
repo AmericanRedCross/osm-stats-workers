@@ -1,4 +1,5 @@
 var bookshelf = require('../common/bookshelf_init');
+var Promise = require('bluebird');
 require('./Changeset');
 
 // Returns Hashtag model
