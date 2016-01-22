@@ -16,8 +16,7 @@ var extentBuffer = require('../src/metrics/geo_extent_buffer');
 tap.test('simulator tests', function (test) {
   fs.readdirSync('test/fixtures/simulator/').forEach(function (file, index) {
     var changeset = JSON.parse(fs.readFileSync('test/fixtures/simulator/' + file));
-    console.log(changeset);
-    test.doesNotThrow(() => country(changeset), 'calculate country');
+    test.doesNotThrow(() => country(extentBuffer(500)(changeset)), 'calculate country');
     test.doesNotThrow(() => roadCount(changeset), 'calculate road count');
     test.doesNotThrow(() => roadCountMod(changeset), 'calculate road count mod');
     test.doesNotThrow(() => buildingCount(changeset), 'calculate building count');
@@ -27,7 +26,7 @@ tap.test('simulator tests', function (test) {
     test.doesNotThrow(() => roadLength(changeset), 'calculate road length');
     test.doesNotThrow(() => roadLengthMod(changeset), 'calculate road length mod');
     test.doesNotThrow(() => waterwayLength(changeset), 'calculate waterway length');
-    test.doesNotThrow(() => extentBuffer(100)(changeset), 'calculate buffer');
+    test.doesNotThrow(() => extentBuffer(500)(changeset), 'calculate buffer');
     test.doesNotThrow(() => calculateMetrics(changeset), 'calculating metrics');
   });
   test.end();
