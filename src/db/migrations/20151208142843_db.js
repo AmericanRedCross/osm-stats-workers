@@ -73,12 +73,12 @@ exports.up = function (knex, Promise) {
 
 exports.down = function (knex, Promise) {
   return knex.schema
+    .dropTable('badges_users')
     .dropTable('badges')
-    .dropTable('users_badges')
-    .dropTable('countries')
     .dropTable('changesets_countries')
+    .dropTable('countries')
+    .dropTable('changesets_hashtags')
     .dropTable('hashtags')
-    .dropTable('chagesets_hashtags')
     .dropTable('changesets')
     .dropTable('users');
 };
