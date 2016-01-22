@@ -67,18 +67,18 @@ exports.up = function (knex, Promise) {
       table.increments('id').primary();
       table.integer('user_id').references('users.id');
       table.integer('badge_id').references('badges.id');
-      table.timestamp('created_at').defaultTo(knex.raw('now()'));
+      table.timestamp('created_at').defaultTo(knex.fn.now());
     });
 };
 
 exports.down = function (knex, Promise) {
   return knex.schema
+    .dropTable('badges_users')
     .dropTable('badges')
-    .dropTable('users_badges')
-    .dropTable('countries')
     .dropTable('changesets_countries')
+    .dropTable('countries')
+    .dropTable('changesets_hashtags')
     .dropTable('hashtags')
-    .dropTable('chagesets_hashtags')
     .dropTable('changesets')
     .dropTable('users');
 };

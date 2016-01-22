@@ -1,26 +1,31 @@
-// WARNING: This test currently modifies the DB!
-// test on a separate DB
-// TODO: Create new dev DB for these tests
-
 var fs = require('fs');
 var tap = require('tap');
 var Worker = require('../../');
-var worker = new Worker();
 
 var changeset = JSON.parse(fs.readFileSync('test/fixtures/example.json'));
 
-tap.test('add to db', function (test) {
-  worker.addToDB(changeset).then(function (results) {
-    test.ok(results, 'worker added changeset to the database');
-  })
-  .catch(function (e) {
-    console.log(e);
-    test.fail('an error occured', e);
-  })
-  .finally(function () {
-    test.end();
+tap.test('add to db', function (t) {
+  var worker = new Worker();
+  var knex = worker.bookshelf.knex;
+  t.test('setup', function (test) {
+    knex.migrate.latest().then(function () {
+      return knex.seed.run();
+    })
+    .then(function () {
+      test.end();
+    })
+    .catch(function () {
+      test.bailout();
+    });
   });
-  test.tearDown(function () {
+
+  t.test('adding', function (test) {
+    return worker.addToDB(changeset).then(function (result) {
+      t.ok(result, 'added to db');
+      t.end();
+    });
+  });
+  t.tearDown(function () {
     worker.destroy();
   });
 });

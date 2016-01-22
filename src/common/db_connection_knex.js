@@ -1,12 +1,6 @@
 // Returns knex connection to the local
 // missingmaps database
-module.exports = require('knex')({
-  client: 'pg',
-  connection: process.env.DATABASE_URL || {
-    host: 'localhost',
-    port: 5432,
-    user: 'postgres',
-    password: '',
-    database: 'missingmaps'
-  }
-});
+
+var knexConfig = require('../db/knexfile.js');
+var db = process.env.NODE_ENV || 'development';
+module.exports = require('knex')(knexConfig[db]);

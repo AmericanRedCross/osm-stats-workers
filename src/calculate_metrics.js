@@ -11,30 +11,21 @@ var poiCount = require('./metrics/poi_count');
 var roadLength = require('./metrics/road_length');
 var roadLengthMod = require('./metrics/road_length_mod');
 var waterwayLength = require('./metrics/river_length');
-var extentCvHull = require('./metrics/geo_extent_convexhull');
 var extentBuffer = require('./metrics/geo_extent_buffer');
 
 module.exports = function (changeset, precision) {
   var metadata = changeset.metadata;
-  precision = precision || 'buffer';
-  var geoExtentFunc = {};
-  if (precision === 'hull') {
-    geoExtentFunc = extentCvHull;
-  } else if (precision === 'buffer') {
-    geoExtentFunc = extentBuffer(100);
-  } else {
-    throw new Error('invalid geo extent parameter');
-  }
+  var buf = extentBuffer(500)(changeset);
 
   return {
     id: +metadata.id,
     hashtags: metadata.comment.split(' '),
-    country: country(changeset),
+    countries: country(buf),
     user: {
       id: +metadata.uid,
       name: metadata.user,
       avatar: '?', // todo: add avatar lookup
-      geo_extent: geoExtentFunc(changeset)
+      geo_extent: buf
     },
     metrics: {
       road_count: roadCount(changeset),

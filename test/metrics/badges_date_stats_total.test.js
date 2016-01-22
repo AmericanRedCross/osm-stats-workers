@@ -13,13 +13,13 @@ tap.test('badge logic - total date metrics', function (t) {
     {}, 'a user with <25 unique dates should return an empty object');
 
   t.deepEqual(totalDateCheck(userWithTierOneBadges),
-    {yearlongmapper: 1}, 'a user with 25-49 unique dates should return {yearlongmapper: 1}');
+    {yearlongmapper: {category: 15, level: 1}}, 'a user with 25-49 unique dates should return {yearlongmapper: {category: 15, level: 1}}');
 
   t.deepEqual(totalDateCheck(userWithTierTwoBadges),
-    {yearlongmapper: 2}, 'a user with 50-99 sequential dates should return {yearlongmapper: 2}');
+    {yearlongmapper: {category: 15, level: 2}}, 'a user with 50-99 sequential dates should return {yearlongmapper: {category: 15, level: 2}}');
 
   t.deepEqual(totalDateCheck(userWithTierThreeBadges),
-    {yearlongmapper: 3}, 'a user with 100+ sequential dates should return {yearlongmapper: 3}');
+    {yearlongmapper: {category: 15, level: 3}}, 'a user with 100+ sequential dates should return {yearlongmapper: {category: 15, level: 3}}');
 
   t.end();
 });
