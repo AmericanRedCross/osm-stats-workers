@@ -11,7 +11,7 @@ var Hashtag = bookshelf.Model.extend({
 }, {
   createHashtags: function (hashtags, transaction) {
     return Promise.map(hashtags, function (hashtag) {
-      return Hashtag.where('hashtag', hashtag).fetch()
+      return Hashtag.where('hashtag', hashtag).fetch({transacting: transaction})
       .then(function (result) {
         if (!result) {
           return Hashtag.forge({

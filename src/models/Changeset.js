@@ -17,7 +17,7 @@ var Changeset = bookshelf.Model.extend({
   }
 }, {
   createChangesetIfNotExists: function (metrics, transaction) {
-    return Changeset.where({id: metrics.id}).fetch().then(function (result) {
+    return Changeset.where({id: metrics.id}).fetch({transacting: transaction}).then(function (result) {
       if (!result) {
         return Changeset.forge({
           id: metrics.id,

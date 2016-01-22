@@ -4,7 +4,7 @@
   "description": "Summarize OSM data to metrics",
   "main": "app.js",
   "scripts": {
-    "test": "npm run lint && tap test/*/*.test.js ",
+    "test": "npm run lint && NODE_ENV=test tap test/*/*.test.js; rm test.sqlite3",
     "lint": "eslint index.js src/*",
     "dbinit": "./bin/database_init.sh"
   },
@@ -22,6 +22,7 @@
     "npm": "^3.5.2",
     "pg": "^4.4.3",
     "ramda": "^0.19.0",
+    "sqlite3": "^3.1.1",
     "turf": "^2.0.2"
   },
   "devDependencies": {

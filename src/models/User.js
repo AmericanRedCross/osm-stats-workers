@@ -133,7 +133,8 @@ var User = bookshelf.Model.extend({
     var newBadges = R.difference(earnedBadgeLevels, currentBadgeLevels);
 
     return Promise.map(newBadges, function (badge) {
-      return Badge.where({category: badge.category, level: badge.level}).fetch()
+      console.log(badge);
+      return Badge.where({category: badge.category, level: badge.level}).fetch({transacting: transaction})
       .then(function (badge) {
         return user.badges().attach(badge, opts);
       });
@@ -141,7 +142,7 @@ var User = bookshelf.Model.extend({
   }
 }, {
   createUserIfNotExists: function (user, transaction) {
-    return User.where({id: user.id}).fetch({withRelated: 'badges'}).then(function (result) {
+    return User.where({id: user.id}).fetch({withRelated: 'badges', transacting: transaction}).then(function (result) {
       if (!result) {
         return User.forge({
           id: user.id,
