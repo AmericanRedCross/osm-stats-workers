@@ -10,7 +10,7 @@ module.exports = function (features, type) {
       .map(function (segment) {
         return [
           segment.nodes.map(function (node) {
-            return [node.lon, node.lat];
+            return [Number(node.lon), Number(node.lat)];
           })
         ];
       });
@@ -18,7 +18,7 @@ module.exports = function (features, type) {
     array = features
       .map(function (segment) {
         return segment.nodes.map(function (node) {
-          return [node.lon, node.lat];
+          return [Number(node.lon), Number(node.lat)];
         });
       });
   }

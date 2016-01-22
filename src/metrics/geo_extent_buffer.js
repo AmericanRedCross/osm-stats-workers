@@ -21,7 +21,7 @@ module.exports = function (bufferDistance) {
       return (element.tags && element.tags.hasOwnProperty('building'));
     });
     var nodes = elements.filter(function (element) {
-      return (element.type && element.type === 'node');
+      return (element.tags && element.tags.hasOwnProperty('amenity'));
     });
 
     // Convert OSM changset feature objects to multipart GeoJSON features

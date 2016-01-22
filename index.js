@@ -36,11 +36,11 @@ Worker.prototype.addToDB = function (changeset) {
       return Promise.join(
         Changeset.createChangesetIfNotExists(metrics, t),
         Hashtag.createHashtags(hashtags, t),
-        Country.where({name: metrics.country}).fetch({transacting: t}),
-        function (changeset, hashtags, country) {
+        Country.query('where', 'name', 'in', metrics.countries).fetch({transacting: t}),
+        function (changeset, hashtags, countries) {
           return Promise.all([
             changeset.hashtags().attach(hashtags, {transacting: t}),
-            changeset.countries().attach(country, {transacting: t}),
+            changeset.countries().attach(countries, {transacting: t}),
             user.updateUserMetrics(metrics.metrics, metrics.user.geo_extent, t)
           ]);
         })

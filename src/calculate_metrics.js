@@ -15,16 +15,17 @@ var extentBuffer = require('./metrics/geo_extent_buffer');
 
 module.exports = function (changeset, precision) {
   var metadata = changeset.metadata;
+  var buf = extentBuffer(500)(changeset);
 
   return {
     id: +metadata.id,
     hashtags: metadata.comment.split(' '),
-    country: country(changeset),
+    countries: country(buf),
     user: {
       id: +metadata.uid,
       name: metadata.user,
       avatar: '?', // todo: add avatar lookup
-      geo_extent: extentBuffer(100)(changeset)
+      geo_extent: buf
     },
     metrics: {
       road_count: roadCount(changeset),
