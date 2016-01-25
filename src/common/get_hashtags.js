@@ -5,7 +5,7 @@ function getHashtags (str) {
   var wordlist = str.split(' ');
   var hashlist = [];
   wordlist.forEach(function (word) {
-    if (word.startsWith('#') && !R.contains(word, hashlist)) {
+    if (R.test(/^#/, word) && !R.contains(word, hashlist)) {
       word = word.trim();
       word = word.replace(/,\s*$/, '');
       hashlist.push(word.slice(1));
