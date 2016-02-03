@@ -1,4 +1,6 @@
-var env = require('./local.env.js');
+// load environmental variables
+require('dotenv').config()
+
 var AWS = require('aws-sdk');
 var Worker = require('../../');
 var worker = new Worker(function (err, changeset) {
