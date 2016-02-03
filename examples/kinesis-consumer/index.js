@@ -4,24 +4,28 @@
 require('dotenv').config()
 
 var Worker = require('../../');
+var Promise = require('bluebird');
+
 
 exports.handler = function(event, context) {
   console.log('osm-stats-version' + require('./package.json').version);
 
-  event.Records.forEach(function(record) {
-      // Kinesis data is base64 encoded so decode here
-      var payload = new Buffer(record.kinesis.data, 'base64').toString('utf8');
-      console.log('Payload:', payload);
-      try {
-        var worker = new Worker(function(err, changeset) {
-          if (err) console.error(err);
-          else console.log(changeset)
-        });
-        worker.addToDB(JSON.parse(payload));
-      } catch (ex) {
-        console.log('FAILURE', ex);
-      }
-  });
+  // loop through all records in batch
+  console.log('Processing %s records', event.Records.length);
 
-  context.succeed("SUCCESS");
+  var worker = new Worker(function(err, changeset) {
+    if (err) console.error(err);
+    else console.log(changeset)
+  });
+  Promise.map(event.Records, function (record) {
+    var payload = new Buffer(record.kinesis.data, 'base64').toString('utf8');
+    console.log('PAYLOAD:', payload);
+    return worker.addToDB(JSON.parse(payload))
+  }).then(function (result) {
+    console.log('SUCCESS:', result);
+    return context.succeed('Success');
+  }).catch(function (err) {
+    console.log('FAILURE: ', err);
+   return context.fail('FFailure');
+  })
 };
