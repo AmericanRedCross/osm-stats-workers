@@ -1,39 +1,25 @@
+# example handler to handle kinesis stream input
+
 // load environmental variables
 require('dotenv').config()
 
-var AWS = require('aws-sdk');
-var Worker = require('../../');
-var worker = new Worker(function (err, changeset) {
-  console.error(err);
-  console.log(changeset);
-});
+exports.handler = function(event, context) {
+  console.log('osm-stats-version' + require('./package.json').version);
 
-var kinesis = new AWS.Kinesis({
-  region: 'us-east-1',
-  params: {
-    StreamName: process.env.KINESIS_STREAM_NAME || env.KINESIS_STREAM_NAME || 'test'
-  }
-});
+  event.Records.forEach(function(record) {
+      // Kinesis data is base64 encoded so decode here
+      var payload = new Buffer(record.kinesis.data, 'base64').toString('utf8');
+      console.log('Payload:', payload);
+      try {
+        var worker = new Worker(function(err, changeset) {
+          if (err) console.error(err);
+          else console.log(changeset)
+        });
+        worker.addToDB(JSON.parse(payload));
+      } catch (ex) {
+        console.log('FAILURE', ex);
+      }
+  });
 
-var readable = require('kinesis-readable')(kinesis, {
-  iterator: 'TRIM_HORIZON',
-  limit: 1
-});
-
-readable.on('data', function (records) {
-  processRecord(records[0].Data.toString());
-})
-.on('error', function (err) {
-  console.error(err);
-  worker.destroy();
-});
-
-function processRecord (data) {
-  console.log('processing new record');
-  try {
-    worker.addToDB(JSON.parse(data));
-  } catch (e) {
-    console.error(e);
-    console.log(data.metadata.id);
-  }
-}
+  context.succeed("SUCCESS");
+};
