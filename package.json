@@ -24,7 +24,8 @@
     "pg": "^4.4.3",
     "ramda": "^0.19.0",
     "sqlite3": "^3.1.1",
-    "turf": "^2.0.2"
+    "turf": "^2.0.2",
+    "dotenv": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^1.10.3",
