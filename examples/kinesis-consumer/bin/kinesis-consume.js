@@ -4,7 +4,7 @@
 require('dotenv').config()
 
 var AWS = require('aws-sdk');
-var Worker = require('../../');
+var Worker = require('../../../');
 var worker = new Worker(function (err, changeset) {
   console.error(err);
   console.log(changeset);
@@ -13,7 +13,7 @@ var worker = new Worker(function (err, changeset) {
 var kinesis = new AWS.Kinesis({
   region: process.env.AWS_REGION || 'us-east-1',
   params: {
-    StreamName: process.env.KINESIS_STREAM_NAME || env.KINESIS_STREAM_NAME || 'test'
+    StreamName: process.env.KINESIS_STREAM_NAME || 'test'
   }
 });
 
