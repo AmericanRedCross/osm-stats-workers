@@ -1,7 +1,9 @@
-# example handler to handle kinesis stream input
+// example handler to handle kinesis stream input
 
 // load environmental variables
 require('dotenv').config()
+
+var Worker = require('../../');
 
 exports.handler = function(event, context) {
   console.log('osm-stats-version' + require('./package.json').version);
