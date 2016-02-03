@@ -11,7 +11,8 @@
   "dependencies": {
     "budo": "^7.0.4",
     "chance": "^0.8.0",
-    "ramda": "^0.18.0"
+    "ramda": "^0.18.0",
+    "dotenv": "^2.0.0",
   },
   "devDependencies": {
     "babelify": "^7.2.0",
