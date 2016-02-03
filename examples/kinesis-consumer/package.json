@@ -1,6 +1,6 @@
 {
   "name": "kinesis-consumer-example",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Example for getting data from kinesis and processing it ",
   "main": "index.js",
   "scripts": {
