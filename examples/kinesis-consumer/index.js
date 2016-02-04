@@ -8,7 +8,7 @@ var Promise = require('bluebird');
 
 
 exports.handler = function(event, context) {
-  console.log('osm-stats-version' + require('./package.json').version);
+  console.log('osm-stats-version ' + require('./package.json').version);
 
   // loop through all records in batch
   console.log('Processing %s records', event.Records.length);
@@ -26,6 +26,6 @@ exports.handler = function(event, context) {
     return context.succeed('Success');
   }).catch(function (err) {
     console.log('FAILURE: ', err);
-   return context.fail('FFailure');
+   return context.fail('Failure');
   })
 };
