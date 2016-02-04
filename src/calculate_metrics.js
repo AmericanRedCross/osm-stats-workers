@@ -15,8 +15,8 @@ var extentBuffer = require('./metrics/geo_extent_buffer');
 
 module.exports = function (changeset, precision) {
   var metadata = changeset.metadata;
-  changeset.elements = changeset.elements.filter(function(element) {
-    return (element.type != 'relation');
+  changeset.elements = changeset.elements.filter((element) => {
+    return (element.type !== 'relation');
   });
   var buf = extentBuffer(500)(changeset);
 
