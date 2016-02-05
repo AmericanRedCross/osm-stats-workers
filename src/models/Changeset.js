@@ -39,7 +39,25 @@ var Changeset = bookshelf.Model.extend({
           created_at: new Date(metrics.created_at)
         }).save(null, {method: 'insert', transacting: transaction});
       } else {
-        throw new Error('Changeset exists');
+        return result.save({
+          id: result.get('id'),
+          road_count_add: Number(result.get('road_count_add')) + metrics.metrics.road_count,
+          road_count_mod: Number(result.get('road_count_mod')) + metrics.metrics.road_count_mod,
+          building_count_add: Number(result.get('building_count_add')) + metrics.metrics.building_count,
+          building_count_mod: Number(result.get('building_count_mod')) + metrics.metrics.building_count_mod,
+          waterway_count_add: Number(result.get('waterway_count_add')) + metrics.metrics.waterway_count,
+          poi_count_add: Number(result.get('poi_count_add')) + metrics.metrics.poi_count,
+          // GPS trace not yet implemented
+          gpstrace_count_add: 0,
+          road_km_add: Number(result.get('road_km_add')) + metrics.metrics.road_km,
+          road_km_mod: Number(result.get('road_km_mod')) + metrics.metrics.road_km_mod,
+          waterway_km_add: Number(result.get('waterway_km_add')) + metrics.metrics.waterway_km,
+          // GPS trace not yet implemented
+          gpstrace_km_add: 0,
+          editor: result.get('editor'),
+          user_id: metrics.user.id,
+          created_at: result.get('created_at')
+        }, {method: 'update', transacting: transaction}); 
       }
     });
   }
