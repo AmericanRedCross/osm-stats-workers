@@ -10,3 +10,5 @@ Icon
 
 # Thumbnails
 ._*
+
+.nyc_output/

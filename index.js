@@ -15,7 +15,7 @@ var Worker = function (loggingFn) {
 };
 
 Worker.prototype.destroy = function () {
-  this.bookshelf.knex.destroy();
+  return this.bookshelf.knex.destroy();
 };
 
 Worker.prototype.addToDB = function (changeset) {
@@ -38,14 +38,15 @@ Worker.prototype.addToDB = function (changeset) {
         Hashtag.createHashtags(hashtags, t),
         Country.query('where', 'name', 'in', metrics.countries).fetch({transacting: t}),
         function (changeset, hashtags, countries) {
-          return Promise.all([
-            changeset.hashtags().attach(hashtags, {transacting: t}),
-            changeset.countries().attach(countries, {transacting: t}),
-            user.updateUserMetrics(metrics.metrics, metrics.user.geo_extent, t)
-          ]);
+          return changeset.hashtags().attach(hashtags, {transacting: t})
+            .then(function () {
+              return changeset.countries().attach(countries, {transacting: t});
+            })
+            .then(function () {
+              return user.updateUserMetrics(metrics.metrics, metrics.user.geo_extent, t);
+            });
         })
-        .then(function (results) {
-          var user = results[2];
+        .then(function (user) {
           return Promise.join(
             user.getNumCountries(t),
             user.getHashtags(t),
