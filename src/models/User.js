@@ -13,7 +13,9 @@ require('./Hashtag');
 
 // Returns User model
 var User = bookshelf.Model.extend({
+  jsonColumns: ['geo_extent'],
   tableName: 'users',
+
   changesets: function () {
     return this.hasMany('Changeset');
   },
@@ -133,7 +135,6 @@ var User = bookshelf.Model.extend({
     var newBadges = R.difference(earnedBadgeLevels, currentBadgeLevels);
 
     return Promise.map(newBadges, function (badge) {
-      console.log(badge);
       return Badge.where({category: badge.category, level: badge.level}).fetch({transacting: transaction})
       .then(function (badge) {
         return user.badges().attach(badge, opts);

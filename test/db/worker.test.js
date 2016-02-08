@@ -8,14 +8,16 @@ tap.test('add to db', function (t) {
   var worker = new Worker();
   var knex = worker.bookshelf.knex;
   t.test('setup', function (test) {
-    knex.migrate.latest().then(function () {
-      return knex.seed.run();
-    })
-    .then(function () {
-      test.end();
-    })
-    .catch(function () {
-      test.bailout();
+    knex.migrate.rollback().then(function () {
+      knex.migrate.latest().then(function () {
+        return knex.seed.run();
+      })
+        .then(function () {
+          test.end();
+        })
+        .catch(function () {
+          test.bailout();
+        });
     });
   });
 
@@ -26,6 +28,6 @@ tap.test('add to db', function (t) {
     });
   });
   t.tearDown(function () {
-    worker.destroy();
+    return worker.destroy();
   });
 });

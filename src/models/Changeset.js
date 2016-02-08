@@ -57,7 +57,7 @@ var Changeset = bookshelf.Model.extend({
           editor: result.get('editor'),
           user_id: metrics.user.id,
           created_at: result.get('created_at')
-        }, {method: 'update', transacting: transaction}); 
+        }, {method: 'update', transacting: transaction});
       }
     });
   }
