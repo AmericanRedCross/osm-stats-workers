@@ -4,7 +4,7 @@
   "description": "Summarize OSM data to metrics",
   "main": "app.js",
   "scripts": {
-    "test": "npm run lint && NODE_ENV=test tap test/*/*.test.js; rm test.sqlite3",
+    "test": "npm run lint && NODE_ENV=test tap test/*/*.test.js --cov",
     "lint": "eslint index.js src/*",
     "dbinit": "./bin/database_init.sh"
   },
@@ -13,6 +13,7 @@
   "dependencies": {
     "bluebird": "^3.0.6",
     "bookshelf": "^0.9.1",
+    "bookshelf-json-columns": "^0.1.0",
     "country-reverse-geocoding": "^0.2.2",
     "fs": "0.0.2",
     "geojson-precision": "^0.4.0",
