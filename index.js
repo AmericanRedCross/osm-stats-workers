@@ -1,7 +1,3 @@
-
-// load environmental variables
-require('dotenv').config()
-
 var Promise = require('bluebird');
 var getHashtags = require('./src/common/get_hashtags.js');
 
