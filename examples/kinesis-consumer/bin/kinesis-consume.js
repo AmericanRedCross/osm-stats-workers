@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // load environmental variables
-require('dotenv').config()
+require('dotenv').config();
 
 var AWS = require('aws-sdk');
 var Worker = require('../../../');
