@@ -1,37 +1,32 @@
-var env = require('./local.env.js');
-var AWS = require('aws-sdk');
+// example handler to handle kinesis stream input
+
+// load environmental variables
+require('dotenv').config();
+
 var Worker = require('../../');
-var worker = new Worker(function (err, changeset) {
-  console.error(err);
-  console.log(changeset);
-});
+var Promise = require('bluebird');
 
-var kinesis = new AWS.Kinesis({
-  region: 'us-east-1',
-  params: {
-    StreamName: process.env.KINESIS_STREAM_NAME || env.KINESIS_STREAM_NAME || 'test'
-  }
-});
+exports.handler = function (event, context) {
+  console.log('osm-stats-version ' + require('./package.json').version);
 
-var readable = require('kinesis-readable')(kinesis, {
-  iterator: 'TRIM_HORIZON',
-  limit: 1
-});
+  // loop through all records in batch
+  console.log('Processing %s records', event.Records.length);
 
-readable.on('data', function (records) {
-  processRecord(records[0].Data.toString());
-})
-.on('error', function (err) {
-  console.error(err);
-  worker.destroy();
-});
-
-function processRecord (data) {
-  console.log('processing new record');
-  try {
-    worker.addToDB(JSON.parse(data));
-  } catch (e) {
-    console.error(e);
-    console.log(data.metadata.id);
-  }
-}
+  var worker = new Worker(function (err, changeset) {
+    if (err) console.error(err);
+    else console.log(changeset);
+  });
+  return Promise.map(event.Records, function (record) {
+    var payload = new Buffer(record.kinesis.data, 'base64').toString('utf8');
+    console.log('PAYLOAD:', payload);
+    return worker.addToDB(JSON.parse(payload));
+  }).then(function (result) {
+    return worker.destroy().then(function () {
+      console.log('SUCCESS:', result);
+      return context.succeed('Success');
+    });
+  }).catch(function (err) {
+    console.log('FAILURE: ', err);
+    return context.fail('Failure');
+  });
+};

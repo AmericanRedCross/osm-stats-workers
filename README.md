@@ -23,7 +23,7 @@ knex migrate:make migration_name
 
 The database includes seed data which is necessary for proper operation of the workers. To seed the database, run
 ```
-knex migrate:latest
+knex seed:run
 ```
 
 from the src/db/migrations directory.

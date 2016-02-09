@@ -1,15 +1,23 @@
 {
   "name": "kinesis-consumer-example",
-  "version": "0.0.1",
-  "description": "Example for getting data from kinesis and processing it ",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "GPL-3.0",
-  "dependencies": {
-    "aws-sdk": "^2.2.29",
-    "kinesis-readable": "^1.0.0"
-  }
+    "version": "0.0.2",
+    "description": "Example for getting data from kinesis and processing it ",
+    "main": "index.js",
+    "scripts": {
+      "test": "npm run lint && NODE_ENV=test tap test/*.test.js --cov",
+      "lint": "eslint index.js"
+    },
+    "author": "",
+    "license": "GPL-3.0",
+    "dependencies": {
+      "aws-sdk": "^2.2.29",
+      "kinesis-readable": "^1.0.0"
+    },
+    "devDependencies": {
+      "eslint": "^1.10.3",
+      "eslint-config-semistandard": "^5.0.0",
+      "eslint-config-standard": "^4.4.0",
+      "eslint-plugin-standard": "^1.3.1",
+      "tap": "^2.3.1"
+    }
 }

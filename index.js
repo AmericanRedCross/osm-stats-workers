@@ -25,7 +25,7 @@ Worker.prototype.addToDB = function (changeset) {
   try {
     metrics = calculateMetrics(changeset);
   } catch (e) {
-    component.logger(e);
+    component.logger(e, changeset);
     return Promise.reject(e);
   }
   var hashtags = getHashtags(changeset.metadata.comment);
