@@ -14,35 +14,46 @@ var waterwayLength = require('./metrics/river_length');
 var extentBuffer = require('./metrics/geo_extent_buffer');
 
 module.exports = function (changeset, precision) {
-  var metadata = changeset.metadata;
-  changeset.elements = changeset.elements.filter((element) => {
-    return (element.type !== 'relation');
+  changeset.elements = changeset.elements.filter(function(element) {
+    return ((element.type !== 'relation') && element.tags &&
+        ((element.type == 'way') && 
+          (element.tags.hasOwnProperty('waterway') ||
+          element.tags.hasOwnProperty('highway') ||
+          element.tags.hasOwnProperty('building'))) ||
+        ((element.type == 'node') &&
+          element.tags.hasOwnProperty('amenity'))
+    );
   });
-  var buf = extentBuffer(500)(changeset);
 
-  return {
-    id: +metadata.id,
-    hashtags: metadata.comment.split(' '),
-    countries: country(buf),
-    user: {
-      id: +metadata.uid,
-      name: metadata.user,
-      avatar: '?', // todo: add avatar lookup
-      geo_extent: buf
-    },
-    metrics: {
-      road_count: roadCount(changeset),
-      road_count_mod: roadCountMod(changeset),
-      building_count: buildingCount(changeset),
-      building_count_mod: buildingCountMod(changeset),
-      waterway_count: waterwayCount(changeset),
-      poi_count: poiCount(changeset),
-      road_km: roadLength(changeset),
-      road_km_mod: roadLengthMod(changeset),
-      waterway_km: waterwayLength(changeset)
-      // todo: add GPS trace lookup; placeholder functions return 0
-    },
-    editor: metadata.created_by,
-    created_at: metadata.created_at
+  if (changeset.elements.length > 0) {
+    var metadata = changeset.metadata;
+    var buf = extentBuffer(500)(changeset);
+    return {
+      id: +metadata.id,
+      hashtags: metadata.comment.split(' '),
+      countries: country(buf),
+      user: {
+        id: +metadata.uid,
+        name: metadata.user,
+        avatar: '?', // todo: add avatar lookup
+        geo_extent: buf
+      },
+      metrics: {
+        road_count: roadCount(changeset),
+        road_count_mod: roadCountMod(changeset),
+        building_count: buildingCount(changeset),
+        building_count_mod: buildingCountMod(changeset),
+        waterway_count: waterwayCount(changeset),
+        poi_count: poiCount(changeset),
+        road_km: roadLength(changeset),
+        road_km_mod: roadLengthMod(changeset),
+        waterway_km: waterwayLength(changeset)
+        // todo: add GPS trace lookup; placeholder functions return 0
+      },
+      editor: metadata.created_by,
+      created_at: metadata.created_at
+    };
+  } else {
+    return {};
   };
 };
