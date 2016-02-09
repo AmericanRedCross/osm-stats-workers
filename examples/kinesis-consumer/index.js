@@ -26,7 +26,6 @@ exports.handler = function (event, context) {
       return context.succeed('Success');
     });
   }).catch(function (err) {
-    console.log('FAILURE: ', err);
-    return context.fail('Failure');
+    return context.fail(err);
   });
 };
