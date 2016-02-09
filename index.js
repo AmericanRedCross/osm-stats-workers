@@ -21,6 +21,7 @@ Worker.prototype.destroy = function () {
 Worker.prototype.addToDB = function (changeset) {
   this.changeset = changeset;
   var component = this;
+  var metrics = {};
   try {
     metrics = calculateMetrics(changeset);
   } catch (e) {
