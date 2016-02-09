@@ -13,19 +13,27 @@ var roadLengthMod = require('./metrics/road_length_mod');
 var waterwayLength = require('./metrics/river_length');
 var extentBuffer = require('./metrics/geo_extent_buffer');
 
-var isNotRelation = (element) => element.type !== 'relation';
-var hasTags = (element) => element.hasOwnProperty('tags');
-var hasTag = (element, tag) => element.tags.hasOwnProperty(tag);
-var isValidWay = (element) => {
+var isNotRelation = function(element) {
+  return element.type !== 'relation';
+}
+var hasTags = function(element) {
+  return element.hasOwnProperty('tags');
+}
+var hasTag = function(element, tag) {
+  return element.tags.hasOwnProperty(tag);
+}
+var isValidWay = function(element) {
   return (element.type === 'way') &&
   (hasTag(element, 'waterway') ||
     hasTag(element, 'highway') ||
     hasTag(element, 'building'));
 };
-var isValidNode = (element) => (element.type === 'node') && (hasTag(element, 'amenity'));
+var isValidNode = function(element) {
+  return (element.type === 'node') && (hasTag(element, 'amenity'));
+}
 
 module.exports = function (changeset, precision) {
-  changeset.elements = changeset.elements.filter((element) => {
+  changeset.elements = changeset.elements.filter(function(element) {
     return isNotRelation(element) &&
       hasTags(element) &&
       (isValidWay(element) || isValidNode(element));
