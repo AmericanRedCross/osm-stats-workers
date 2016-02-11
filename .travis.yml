@@ -8,6 +8,10 @@ env:
 
 before_install:
   - chmod +x ./.build_scripts/deploy.sh
+  - chmod +x ./.build_scripts/zip.sh
 
 script:
-- "./.build_scripts/deploy.sh"
+  - "./.build_scripts/zip.sh"
+
+deploy:
+  - "./.build_scripts/deploy.sh"
