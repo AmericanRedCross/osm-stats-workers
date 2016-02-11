@@ -13,5 +13,5 @@ before_install:
 script:
   - "./.build_scripts/zip.sh"
 
-deploy:
+after_success:
   - "./.build_scripts/deploy.sh"
