@@ -2,4 +2,4 @@
 set -e # halt script on error
 
 mkdir deploy
-zip deploy/osm-stats-workers.zip *
+zip -r deploy/osm-stats-workers.zip *
