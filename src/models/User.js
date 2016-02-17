@@ -73,6 +73,11 @@ var User = bookshelf.Model.extend({
   updateUserMetrics: function (metrics, newExtent, transaction) {
     var user = this;
     var opts = {method: 'update'};
+    var editor = metrics.editor;
+    metrics = metrics.metrics;
+    var jsomEdit = function (editorStr) {
+      return editorStr.toLowerCase().match(/^josm/) ? 1 : 0;
+    };
     if (transaction) {
       opts.transacting = transaction;
     }
@@ -102,7 +107,9 @@ var User = bookshelf.Model.extend({
         Number(user.attributes.total_waterway_km_add) + Number(metrics.waterway_km),
       // GPS trace not yet implemented
       total_gpstrace_km_add:
-        0
+        0,
+      total_josm_edit_count:
+         Number(user.attributes.total_josm_edit_count) + jsomEdit(editor)
     }, opts);
   },
   updateBadges: function (metrics, transaction) {
@@ -119,7 +126,8 @@ var User = bookshelf.Model.extend({
       pois: user.attributes.total_poi_count_add,
       roadKms: user.attributes.total_road_km_add,
       roadKmMods: user.attributes.total_road_km_mod,
-      waterways: user.attributes.total_waterway_km_add
+      waterways: user.attributes.total_waterway_km_add,
+      josm: user.attributes.total_josm_edit_count
     });
     var consistencyBadge = dateSequentialCheck(metrics.timestamps);
     var historyBadge = dateTotalCheck(metrics.timestamps);
@@ -164,7 +172,8 @@ var User = bookshelf.Model.extend({
           total_waterway_km_add: 0,
           // GPS trace not yet implemented
           total_gpstrace_km_add: 0,
-          created_at: new Date()
+          created_at: new Date(),
+          total_josm_edit_count: 0
         }).save(null, {method: 'insert', transacting: transaction});
       } else {
         return result;
