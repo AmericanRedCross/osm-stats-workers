@@ -12,6 +12,7 @@ var roadLength = require('./metrics/road_length');
 var roadLengthMod = require('./metrics/road_length_mod');
 var waterwayLength = require('./metrics/river_length');
 var extentBuffer = require('./metrics/geo_extent_buffer');
+var josmEdits = require('./metrics/josm_edits');
 
 var isNotRelation = function (element) {
   return element.type !== 'relation';
@@ -61,7 +62,8 @@ module.exports = function (changeset, precision) {
         poi_count: poiCount(changeset),
         road_km: roadLength(changeset),
         road_km_mod: roadLengthMod(changeset),
-        waterway_km: waterwayLength(changeset)
+        waterway_km: waterwayLength(changeset),
+        josm_edits: josmEdits(metadata.created_by)
       },
       editor: metadata.created_by,
       created_at: metadata.created_at

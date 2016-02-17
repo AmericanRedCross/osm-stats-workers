@@ -8,6 +8,7 @@ var fs = require('fs');
 var thingsToDo = ['highway', 'river', 'building', 'amenity'];
 var amenities = ['hospital', 'drinking_water', 'clinic', 'school', 'bus_station', 'pharmacy'];
 var actions = ['create', 'modify'];
+var editors = ['JOSM', 'iD'];
 var geojsonLayer = fs.readFileSync('./country_points.json');
 var countries = JSON.parse(geojsonLayer).features;
 var hashtags = chance.n(chance.hashtag, 3);
@@ -181,6 +182,7 @@ Simulation.prototype.randomChangeset = function () {
   changeset.metadata.id = this.ref;
   this.ref += 1;
   changeset.metadata.comment = center.hashtag;
+  changeset.metadata.created_by = chance.pick(editors);
 
   for (var i = 0; i < chance.natural({min: 1, max: 10}); i++) {
     // Pick a thing to do

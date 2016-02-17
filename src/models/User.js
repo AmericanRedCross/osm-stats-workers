@@ -94,11 +94,6 @@ var User = bookshelf.Model.extend({
     var user = this;
     var userMetrics = user.attributes;
     var opts = {method: 'update'};
-    var editor = metrics.editor;
-    metrics = metrics.metrics;
-    var josmEdit = function (editorStr) {
-      return editorStr.toLowerCase().match(/^josm/) ? 1 : 0;
-    };
     if (transaction) {
       opts.transacting = transaction;
     }
@@ -124,7 +119,7 @@ var User = bookshelf.Model.extend({
       total_waterway_km_add:
         Number(userMetrics.total_waterway_km_add) + Number(metrics.waterway_km),
       total_josm_edit_count:
-         Number(user.attributes.total_josm_edit_count) + josmEdit(editor)
+         Number(user.attributes.total_josm_edit_count) + Number(metrics.josm_edits)
     };
     // If >10 minutes (600,000 ms) since GPS trace count last updated, fetch
     // count from OSM user API and save it along with other updated metrics

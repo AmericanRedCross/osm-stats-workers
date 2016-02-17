@@ -44,7 +44,7 @@ Worker.prototype.addToDB = function (changeset) {
                 return changeset.countries().attach(countries, {transacting: t});
               })
               .then(function () {
-                return user.updateUserMetrics(metrics, metrics.user.geo_extent, t);
+                return user.updateUserMetrics(metrics.metrics, metrics.user.geo_extent, t);
               });
           })
           .then(function (user) {
