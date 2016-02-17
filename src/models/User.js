@@ -75,7 +75,7 @@ var User = bookshelf.Model.extend({
     var opts = {method: 'update'};
     var editor = metrics.editor;
     metrics = metrics.metrics;
-    var jsomEdit = function (editorStr) {
+    var josmEdit = function (editorStr) {
       return editorStr.toLowerCase().match(/^josm/) ? 1 : 0;
     };
     if (transaction) {
@@ -109,7 +109,7 @@ var User = bookshelf.Model.extend({
       total_gpstrace_km_add:
         0,
       total_josm_edit_count:
-         Number(user.attributes.total_josm_edit_count) + jsomEdit(editor)
+         Number(user.attributes.total_josm_edit_count) + josmEdit(editor)
     }, opts);
   },
   updateBadges: function (metrics, transaction) {
