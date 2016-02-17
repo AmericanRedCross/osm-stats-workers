@@ -43,11 +43,11 @@ module.exports = function (changeset, precision) {
     var metadata = changeset.metadata;
     var buf = extentBuffer(500)(changeset);
     return {
-      id: +metadata.id,
+      id: Number(metadata.id),
       hashtags: metadata.comment.split(' '),
       countries: country(buf),
       user: {
-        id: +metadata.uid,
+        id: Number(metadata.uid),
         name: metadata.user,
         avatar: '?', // todo: add avatar lookup
         geo_extent: buf
@@ -62,7 +62,6 @@ module.exports = function (changeset, precision) {
         road_km: roadLength(changeset),
         road_km_mod: roadLengthMod(changeset),
         waterway_km: waterwayLength(changeset)
-        // todo: add GPS trace lookup; placeholder functions return 0
       },
       editor: metadata.created_by,
       created_at: metadata.created_at
