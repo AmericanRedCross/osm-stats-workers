@@ -41,7 +41,12 @@ module.exports = function (changeset, precision) {
 
   if (changeset.elements.length > 0) {
     var metadata = changeset.metadata;
-    var buf = extentBuffer(500)(changeset);
+    try {
+        var buf = extentBuffer(500)(changeset);
+    } catch (err) {
+        console.log(err);
+        return {};
+    }
     return {
       id: +metadata.id,
       hashtags: metadata.comment.split(' '),
