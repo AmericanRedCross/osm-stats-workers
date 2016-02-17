@@ -44,7 +44,6 @@ module.exports = function (changeset, precision) {
     try {
         var buf = extentBuffer(500)(changeset);
     } catch (err) {
-        console.log("Error processing geometry");
         console.log(err);
         return {};
     }
