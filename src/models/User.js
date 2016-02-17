@@ -112,8 +112,9 @@ var User = bookshelf.Model.extend({
       opts.transacting = transaction;
     }
     var sumBadges = sumCheck({
-      roads: user.attributes.total_road_count_add,
-      roadMods: user.attributes.total_road_count_mod,
+      // note: road counts and road mod counts were removed
+      // roads: user.attributes.total_road_count_add,
+      // roadMods: user.attributes.total_road_count_mod,
       buildings: user.attributes.total_building_count_add,
       pois: user.attributes.total_poi_count_add,
       roadKms: user.attributes.total_road_km_add,
