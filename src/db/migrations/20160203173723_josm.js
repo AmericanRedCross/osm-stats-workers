@@ -9,7 +9,7 @@ exports.up = function (knex, Promise) {
     knex('changesets').select('id', 'user_id', 'editor')
     .then(function (results) {
       results = results.filter(function (result) {
-        return josm(result.editor) === 1;
+        return result.editor && josm(result.editor) === 1;
       });
       promise.map(results, function (result) {
         return knex('users')
