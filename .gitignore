@@ -13,3 +13,4 @@ Icon
 ._*
 
 .nyc_output/
+*.log
