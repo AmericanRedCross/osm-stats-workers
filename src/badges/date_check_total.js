@@ -3,7 +3,7 @@ var R = require('ramda');
 module.exports = function (dates) {
   var badges = {
     daysTotal: {
-      name: 'Year Long Mapper',
+      name: 'Year-Long Mapper',
       id: 15,
       tiers: {1: 25, 2: 50, 3: 100}
     }

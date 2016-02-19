@@ -12,28 +12,33 @@ var roadLength = require('./metrics/road_length');
 var roadLengthMod = require('./metrics/road_length_mod');
 var waterwayLength = require('./metrics/river_length');
 var extentBuffer = require('./metrics/geo_extent_buffer');
+var josmEdits = require('./metrics/josm_edits');
 
-var isNotRelation = function(element) {
+var isNotRelation = function (element) {
   return element.type !== 'relation';
-}
-var hasTags = function(element) {
+};
+var hasTags = function (element) {
   return element.hasOwnProperty('tags');
-}
-var hasTag = function(element, tag) {
+};
+var hasTag = function (element, tag) {
   return element.tags.hasOwnProperty(tag);
-}
-var isValidWay = function(element) {
+};
+var isValidWay = function (element) {
   return (element.type === 'way') &&
   (hasTag(element, 'waterway') ||
     hasTag(element, 'highway') ||
     hasTag(element, 'building'));
 };
-var isValidNode = function(element) {
+var isValidNode = function (element) {
   return (element.type === 'node') && (hasTag(element, 'amenity'));
-}
+};
 
 module.exports = function (changeset, precision) {
-  changeset.elements = changeset.elements.filter(function(element) {
+  if (!changeset.elements || !changeset.metadata) {
+    return {};
+  }
+
+  changeset.elements = changeset.elements.filter(function (element) {
     return isNotRelation(element) &&
       hasTags(element) &&
       (isValidWay(element) || isValidNode(element));
@@ -43,11 +48,11 @@ module.exports = function (changeset, precision) {
     var metadata = changeset.metadata;
     var buf = extentBuffer(500)(changeset);
     return {
-      id: +metadata.id,
+      id: Number(metadata.id),
       hashtags: metadata.comment.split(' '),
       countries: country(buf),
       user: {
-        id: +metadata.uid,
+        id: Number(metadata.uid),
         name: metadata.user,
         avatar: '?', // todo: add avatar lookup
         geo_extent: buf
@@ -61,8 +66,8 @@ module.exports = function (changeset, precision) {
         poi_count: poiCount(changeset),
         road_km: roadLength(changeset),
         road_km_mod: roadLengthMod(changeset),
-        waterway_km: waterwayLength(changeset)
-        // todo: add GPS trace lookup; placeholder functions return 0
+        waterway_km: waterwayLength(changeset),
+        josm_edits: josmEdits(metadata.created_by)
       },
       editor: metadata.created_by,
       created_at: metadata.created_at

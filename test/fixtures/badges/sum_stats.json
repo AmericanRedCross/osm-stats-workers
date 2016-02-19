@@ -1,7 +1,5 @@
 {
   "user_with_no_badges": {
-    "roads": 1,
-    "roadMods": 1,
     "pois": 1,
     "buildings": 1,
     "gpsTraces": 1,
@@ -15,8 +13,6 @@
     "hashtags": 1
   },
   "user_with_tier1_badges": {
-    "roads": 100,
-    "roadMods": 100,
     "pois": 500,
     "buildings": 100,
     "gpsTraces": 10,
@@ -30,8 +26,6 @@
     "hashtags": 5
   },
   "user_with_tier2_badges": {
-    "roads": 500,
-    "roadMods": 500,
     "pois": 2500,
     "buildings": 500,
     "gpsTraces": 50,
@@ -45,8 +39,6 @@
     "hashtags": 20
   },
   "user_with_tier3_badges": {
-    "roads": 1000,
-    "roadMods": 1000,
     "pois": 5000,
     "buildings": 1000,
     "gpsTraces": 100,
