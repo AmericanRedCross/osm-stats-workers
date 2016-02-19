@@ -10,6 +10,6 @@ exports.down = function (knex, Promise) {
   return knex.schema.table('users', function (table) {
     table.decimal('total_gpstrace_km_add');
     table.dropColumn('total_gps_trace_count_add');
-    table.timestamp('total_gps_trace_updated_from_osm');
+    table.dropColumn('total_gps_trace_updated_from_osm');
   });
 };

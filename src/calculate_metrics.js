@@ -34,6 +34,10 @@ var isValidNode = function (element) {
 };
 
 module.exports = function (changeset, precision) {
+  if (!changeset.elements || !changeset.metadata) {
+    return {};
+  }
+
   changeset.elements = changeset.elements.filter(function (element) {
     return isNotRelation(element) &&
       hasTags(element) &&

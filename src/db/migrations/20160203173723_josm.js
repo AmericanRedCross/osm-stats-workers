@@ -8,13 +8,13 @@ exports.up = function (knex, Promise) {
     // Fill users table
     knex('changesets').select('id', 'user_id', 'editor')
     .then(function (results) {
+      results = results.filter(function (result) {
+        return josm(result.editor) === 1;
+      });
       promise.map(results, function (result) {
-        var isJOSM = josm(result.editor);
-        if (isJOSM === 1) {
-          return knex('users')
-          .where('user_id', result.user_id)
-          .increment('total_josm_edit_count', 1);
-        }
+        return knex('users')
+        .where('user_id', result.user_id)
+        .increment('total_josm_edit_count', 1);
       });
     });
   });
