@@ -1,5 +1,5 @@
 var R = require('ramda');
-var isofetch = require('isomorphic-fetch');
+var fetch = require('request-promise');
 var bookshelf = require('../common/bookshelf_init');
 var mergeExtents = require('../common/merge_extents.js');
 var sumCheck = require('../badges/sum_check');
@@ -73,14 +73,7 @@ var User = bookshelf.Model.extend({
   },
   getGpsTraceCount: function () {
     var userId = this.attributes.id;
-    return isofetch('http://api.openstreetmap.org/api/0.6/user/' + userId)
-    .then(function (res) {
-      if (res.status >= 200 && res.status < 300) {
-        return res.text();
-      } else {
-        throw new Error("Couldn't retrieve data", res.statusText);
-      }
-    })
+    return fetch('http://api.openstreetmap.org/api/0.6/user/' + userId)
     .then(function (xml) {
       var traceCount = 0;
       var traceBegin = xml.split('<traces count="')[1];

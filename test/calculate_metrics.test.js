@@ -6,7 +6,7 @@ var tap = require('tap');
 tap.test('simulator data', function (test) {
   fs.readdirSync('test/fixtures/simulator/').forEach(function (file, index) {
     var changeset = JSON.parse(fs.readFileSync('test/fixtures/simulator/' + file));
-    test.doesNotThrow(() => calculateMetrics(changeset), 'calculating metrics');
+    test.doesNotThrow(function () { return calculateMetrics(changeset); }, 'calculating metrics');
   });
   test.end();
 });
