@@ -100,10 +100,6 @@ var User = bookshelf.Model.extend({
     var metricsToSave = {
       geo_extent:
         mergeExtents(userMetrics.geo_extent, newExtent),
-      total_road_count_add:
-        Number(userMetrics.total_road_count_add) + Number(metrics.road_count),
-      total_road_count_mod:
-        Number(userMetrics.total_road_count_mod) + Number(metrics.road_count_mod),
       total_building_count_add:
         Number(userMetrics.total_building_count_add) + Number(metrics.building_count),
       total_building_count_mod:
@@ -143,9 +139,6 @@ var User = bookshelf.Model.extend({
       opts.transacting = transaction;
     }
     var sumBadges = sumCheck({
-      // note: road counts and road mod counts were removed
-      // roads: user.attributes.total_road_count_add,
-      // roadMods: user.attributes.total_road_count_mod,
       buildings: user.attributes.total_building_count_add,
       pois: user.attributes.total_poi_count_add,
       roadKms: user.attributes.total_road_km_add,
@@ -184,8 +177,6 @@ var User = bookshelf.Model.extend({
           name: user.name,
           geo_extent: user.geo_extent,
           avatar: user.avatar,
-          total_road_count_add: 0,
-          total_road_count_mod: 0,
           total_building_count_add: 0,
           total_building_count_mod: 0,
           total_waterway_count_add: 0,
