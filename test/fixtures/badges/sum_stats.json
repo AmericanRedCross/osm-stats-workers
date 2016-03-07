@@ -1,0 +1,54 @@
+{
+  "user_with_no_badges": {
+    "pois": 1,
+    "buildings": 1,
+    "gpsTraces": 1,
+    "roadKms": 1,
+    "roadKmMods": 1,
+    "waterways": 1,
+    "countries": 1,
+    "tasks": 1,
+    "taskEdits": 1,
+    "josm": 0,
+    "hashtags": 1
+  },
+  "user_with_tier1_badges": {
+    "pois": 500,
+    "buildings": 100,
+    "gpsTraces": 10,
+    "roadKms": 50,
+    "roadKmMods": 50,
+    "waterways": 50,
+    "countries": 5,
+    "tasks": 5,
+    "taskEdits": 5,
+    "josm": 1,
+    "hashtags": 5
+  },
+  "user_with_tier2_badges": {
+    "pois": 2500,
+    "buildings": 500,
+    "gpsTraces": 50,
+    "roadKms": 100,
+    "roadKmMods": 100,
+    "waterways": 100,
+    "countries": 10,
+    "tasks": 20,
+    "taskEdits": 20,
+    "josm": 10,
+    "hashtags": 20
+  },
+  "user_with_tier3_badges": {
+    "pois": 5000,
+    "buildings": 1000,
+    "gpsTraces": 100,
+    "roadKms": 500,
+    "roadKmMods": 500,
+    "waterways": 500,
+    "countries": 25,
+    "tasks": 50,
+    "taskEdits": 50,
+    "josm": 100,
+    "hashtags": 50
+  }
+}

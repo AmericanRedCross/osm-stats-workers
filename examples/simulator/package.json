@@ -1,0 +1,21 @@
+{
+  "name": "simulator",
+  "version": "0.0.1",
+  "description": "A simulator for OSM data",
+  "main": "simulator.js",
+  "scripts": {
+    "start": "budo index.js:bundle.js -- -t [ brfs babelify ]"
+  },
+  "author": "Marc Farra",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "budo": "^7.0.4",
+    "chance": "^0.8.0",
+    "ramda": "^0.18.0",
+    "dotenv": "^2.0.0",
+  },
+  "devDependencies": {
+    "babelify": "^7.2.0",
+    "brfs": "^1.4.1"
+  }
+}

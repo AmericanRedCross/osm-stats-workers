@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "id": "36869344",
+    "uid": "3552954",
+    "user": "Frank T Carra"
+  },
+  "elements": [
+    {
+      "id": "3974945135",
+      "lat": "11.3877379",
+      "lon": "-72.2282311",
+      "version": "1",
+      "timestamp": "2016-01-28T23:24:52Z",
+      "changeset": "36869344",
+      "uid": "3552954",
+      "user": "Frank T Carra",
+      "action": "create",
+      "type": "node",
+      "tags": {
+        "crossing": "zebra",
+        "highway": "crossing"
+      }
+    }
+  ]
+}
