@@ -1,6 +1,6 @@
 {
-  "name": "osm-gamification-workers",
-  "version": "0.1.0",
+  "name": "osm-stats-workers",
+  "version": "0.2.0",
   "description": "Summarize OSM data to metrics",
   "main": "app.js",
   "scripts": {
