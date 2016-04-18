@@ -21,10 +21,14 @@ exports.handler = function (event, context) {
     console.log('PAYLOAD:', payload);
     return worker.addToDB(JSON.parse(payload));
   }).then(function (result) {
-      console.log('SUCCESS:', result);
-      return context.succeed('Success');
+      return worker.destroy(function () {
+        console.log('SUCCESS:', result);
+        return context.succeed('Success');
+      });
   }).catch(function (err) {
-    console.log('FAILURE:', err);
-    return context.fail(err);
+      return worker.destroy(function () {
+        console.log('FAILURE:', err);
+        return context.fail(err);
+      });
   });
 };
