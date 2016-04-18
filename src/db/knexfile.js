@@ -10,6 +10,11 @@ module.exports = {
       password: '',
       database: 'missingmaps'
     },
+    pool: {
+      min: 1,
+      max: 25,
+    },
+    acquireConnectionTimeout: 100000,
     migrations: {
       directory: path.join(__dirname, 'migrations')
     },
