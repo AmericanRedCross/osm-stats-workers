@@ -14,9 +14,9 @@ var Worker = function (loggingFn) {
   this.logger = loggingFn;
 };
 
-//Worker.prototype.destroy = function () {
-//  return this.bookshelf.knex.destroy();
-//};
+Worker.prototype.destroy = function () {
+  return this.bookshelf.knex.destroy();
+};
 
 Worker.prototype.addToDB = function (changeset) {
   this.changeset = changeset;
