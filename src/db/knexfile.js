@@ -12,7 +12,7 @@ module.exports = {
     },
     pool: {
       min: 1,
-      max: 100,
+      max: 1,
     },
     acquireConnectionTimeout: 100000,
     migrations: {
