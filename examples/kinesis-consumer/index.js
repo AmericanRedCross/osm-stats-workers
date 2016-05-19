@@ -2,11 +2,11 @@
 
 // load environmental variables
 require('dotenv').config();
-
-var Worker = require('../../');
 var Promise = require('bluebird');
 
 exports.handler = function (event, context) {
+  var Worker = require('../../');
+
   console.log('osm-stats v%s: processing %s records',
     require('./package.json').version,
     event.Records.length);
@@ -16,18 +16,21 @@ exports.handler = function (event, context) {
     if (err) console.error(err);
     else console.log(changeset);
   });
+
   return Promise.map(event.Records, function (record) {
     var payload = new Buffer(record.kinesis.data, 'base64').toString('utf8');
     console.log('PAYLOAD:', payload);
-    return worker.addToDB(JSON.parse(payload));
+    changeset = JSON.parse(payload);
+    return worker.addToDB(changeset);
   }).then(function (result) {
       //return worker.destroy(function () {
-        console.log('SUCCESS:', result);
+        console.log('SUCCESS: (%s)', changeset.metadata.id, result);
         return context.succeed('Success');
       //});
   }).catch(function (err) {
       //return worker.destroy(function () {
-        console.log('FAILURE:', err);
+        console.log('FAILURE: (%s)', changeset.metadata.id, err);
+        console.trace();
         return context.fail(err);
       //});
   });
