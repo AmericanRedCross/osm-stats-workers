@@ -83,6 +83,27 @@ var User = bookshelf.Model.extend({
       return traceCount;
     });
   },
+  getTaskingManagerStats: function (userId) {
+    var userTaskStats = {done: 0, validated: 0, invalidated: 0};
+    return fetch('http://localhost/~nick/user_data/' + userId + '.json')
+    .then(function (response) {
+      console.log('theresponse', response.status);
+      if (response.statusCode >= 400) {
+        return userTaskStats;
+      }
+      return response.json();
+    })
+    .then(function (json) {
+      console.log(json)
+      var user = JSON.parse(json);
+      Object.keys(user).forEach(function (project) {
+        userTaskStats.done += user[project].done.times.length;
+        userTaskStats.validated += user[project].validated.times.length;
+        userTaskStats.invalidated += user[project].invalidated.times.length;
+      });
+      return userTaskStats;
+    });
+  },
   updateUserMetrics: function (metrics, newExtent, transaction) {
     var user = this;
     var userMetrics = user.attributes;
@@ -90,6 +111,7 @@ var User = bookshelf.Model.extend({
     if (transaction) {
       opts.transacting = transaction;
     }
+
     var metricsToSave = {
       geo_extent:
         mergeExtents(userMetrics.geo_extent, newExtent),
@@ -110,6 +132,15 @@ var User = bookshelf.Model.extend({
       total_josm_edit_count:
          Number(user.attributes.total_josm_edit_count) + Number(metrics.josm_edits)
     };
+
+    // Get Tasking Manager squares done, validated, and invalidated statistics
+    // from Humanitarian Open Street Maps data.
+    this.getTaskingManagerStats(userMetrics.id).then(function (taskManagerStats) {
+      metricsToSave.total_tm_done_count = Number(taskManagerStats.done);
+      metricsToSave.total_tm_val_count = Number(taskManagerStats.validated);
+      metricsToSave.total_tm_inval_count = Number(taskManagerStats.invalidated);
+    });
+
     // If >10 minutes (600,000 ms) since GPS trace count last updated, fetch
     // count from OSM user API and save it along with other updated metrics
     var gpsTraceUpdatedDate = userMetrics.total_gps_trace_updated_from_osm;
