@@ -32,12 +32,12 @@ exports.seed = function (knex, Promise) {
       {'id': 25, 'category': 9, 'name': 'World Renown', 'level': 1, 'created_at': new Date()},
       {'id': 26, 'category': 9, 'name': 'World Renown', 'level': 2, 'created_at': new Date()},
       {'id': 27, 'category': 9, 'name': 'World Renown', 'level': 3, 'created_at': new Date()},
-      {'id': 28, 'category': 10, 'name': 'TaskMan Square Champion', 'level': 1, 'created_at': new Date()},
-      {'id': 29, 'category': 10, 'name': 'TaskMan Square Champion', 'level': 2, 'created_at': new Date()},
-      {'id': 30, 'category': 10, 'name': 'TaskMan Square Champion', 'level': 3, 'created_at': new Date()},
-      {'id': 31, 'category': 11, 'name': 'TaskMan Scrutinizer', 'level': 1, 'created_at': new Date()},
-      {'id': 32, 'category': 11, 'name': 'TaskMan Scrutinizer', 'level': 2, 'created_at': new Date()},
-      {'id': 33, 'category': 11, 'name': 'TaskMan Scrutinizer', 'level': 3, 'created_at': new Date()},
+      {'id': 28, 'category': 10, 'name': 'Task Champion', 'level': 1, 'created_at': new Date()},
+      {'id': 29, 'category': 10, 'name': 'Task Champion', 'level': 2, 'created_at': new Date()},
+      {'id': 30, 'category': 10, 'name': 'Task Champion', 'level': 3, 'created_at': new Date()},
+      {'id': 31, 'category': 11, 'name': 'Scrutinizer', 'level': 1, 'created_at': new Date()},
+      {'id': 32, 'category': 11, 'name': 'Scrutinizer', 'level': 2, 'created_at': new Date()},
+      {'id': 33, 'category': 11, 'name': 'Scrutinizer', 'level': 3, 'created_at': new Date()},
       {'id': 34, 'category': 12, 'name': 'JOSM User', 'level': 1, 'created_at': new Date()},
       {'id': 35, 'category': 12, 'name': 'JOSM User', 'level': 2, 'created_at': new Date()},
       {'id': 36, 'category': 12, 'name': 'JOSM User', 'level': 3, 'created_at': new Date()},
@@ -50,9 +50,9 @@ exports.seed = function (knex, Promise) {
       {'id': 43, 'category': 15, 'name': 'Year-long Mapper', 'level': 1, 'created_at': new Date()},
       {'id': 44, 'category': 15, 'name': 'Year-long Mapper', 'level': 2, 'created_at': new Date()},
       {'id': 45, 'category': 15, 'name': 'Year-long Mapper', 'level': 3, 'created_at': new Date()},
-      {'id': 46, 'category': 16, 'name': 'Crisis Mapping', 'level': 1, 'created_at': new Date()},
-      {'id': 47, 'category': 17, 'name': 'Red Cross Mapper', 'level': 1, 'created_at': new Date()},
-      {'id': 48, 'category': 18, 'name': 'MSF Mapper', 'level': 1, 'created_at': new Date()}
+      {'id': 46, 'category': 16, 'name': 'High Standards', 'level': 1, 'created_at': new Date()},
+      {'id': 47, 'category': 16, 'name': 'High Standards', 'level': 2, 'created_at': new Date()},
+      {'id': 48, 'category': 16, 'name': 'High Standards', 'level': 3, 'created_at': new Date()}
     ])
   );
 };

@@ -1,16 +1,5 @@
 module.exports = function (data) {
   var badges = {
-    // note: road counts and road mod counts were removed
-    // roads: {
-    //   name: 'Road Builder',
-    //   id: 1,
-    //   tiers: {1: 100, 2: 500, 3: 1000}
-    // },
-    // roadMods: {
-    //   name: 'Road Maintainer',
-    //   id: 2,
-    //   tiers: {1: 100, 2: 500, 3: 1000}
-    // },
     pois: {
       name: 'On Point',
       id: 3,
@@ -49,12 +38,12 @@ module.exports = function (data) {
     tasks: {
       name: 'Task Champion',
       id: 10,
-      tiers: {1: 5, 2: 20, 3: 50}
+      tiers: {1: 10, 2: 25, 3: 100}
     },
-    taskEdits: {
+    taskValidations: {
       name: 'Scrutinizer',
       id: 11,
-      tiers: {1: 5, 2: 20, 3: 50}
+      tiers: {1: 25, 2: 100, 3: 250}
     },
     josm: {
       name: 'Awesome JOSM',
@@ -65,6 +54,13 @@ module.exports = function (data) {
       name: 'Mapathoner',
       id: 13,
       tiers: {1: 5, 2: 20, 3: 50}
+    },
+
+    // ID #14 and 16 used by date check logic
+    taskInvalidations: {
+      name: 'High Standards',
+      id: 16,
+      tiers: {1: 25, 2: 100, 3: 250}
     }
   };
 

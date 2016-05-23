@@ -172,7 +172,10 @@ var User = bookshelf.Model.extend({
       roadKmMods: user.attributes.total_road_km_mod,
       waterways: user.attributes.total_waterway_km_add,
       josm: user.attributes.total_josm_edit_count,
-      gpsTraces: user.attributes.total_gps_trace_count_add
+      gpsTraces: user.attributes.total_gps_trace_count_add,
+      tasks: user.attributes.total_tm_done_count,
+      taskValidations: user.attributes.total_tm_val_count,
+      taskInvalidations: user.attributes.total_tm_inval_count
     });
     var consistencyBadge = dateSequentialCheck(metrics.timestamps);
     var historyBadge = dateTotalCheck(metrics.timestamps);
@@ -203,7 +206,6 @@ var User = bookshelf.Model.extend({
           id: user.id,
           name: user.name,
           geo_extent: user.geo_extent,
-          avatar: user.avatar,
           total_building_count_add: 0,
           total_building_count_mod: 0,
           total_waterway_count_add: 0,
