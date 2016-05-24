@@ -85,7 +85,7 @@ var User = bookshelf.Model.extend({
   },
   getTaskingManagerStats: function (userId) {
     var userTaskStats = {done: 0, validated: 0, invalidated: 0};
-    return fetch('http://localhost/~nick/user_data/' + userId + '.json')
+    return fetch('http://tasks.hotosm.org/user_data/' + userId + '.json')
     .then(function (user) {
       user = JSON.parse(user);
       Object.keys(user).forEach(function (project) {
