@@ -54,7 +54,6 @@ module.exports = function (changeset, precision) {
       user: {
         id: Number(metadata.uid),
         name: metadata.user,
-        avatar: '?', // todo: add avatar lookup
         geo_extent: buf
       },
       metrics: {
