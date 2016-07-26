@@ -9,7 +9,6 @@
  * @return {Array}      A list of all hashtags if the list is empty then there are no hashtags or bad params were passed in.
  */
 function getHashtags(text){
-  //If text is null then there are no hashtags.
   if (!text) {
     return [];
   }
