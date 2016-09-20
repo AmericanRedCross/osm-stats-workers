@@ -1,29 +1,62 @@
 var turf = require('turf');
-var waysToSinglepoints = require('../common/ways_to_singlepoints');
-var nodesToSinglepoints = require('../common/nodes_to_singlepoints');
 
 // Takes OSM changeset, Returns convex hull of changeset
 // features as GeoJSON.
 module.exports = function (changeset) {
-  var elements = changeset.elements;
-  // Filter OSM changeset for attributed ways (waterway, highway,
-  // and building), and all nodes. Should the nodes be limited
-  // to only amenities, as in the case of the count metrics?
-  var nodes = elements.filter(function (element) {
-    return (element.type && element.type === 'node');
-  });
-  var ways = elements.filter(function (element) {
-    return (element.tags &&
-           (element.tags.hasOwnProperty('waterway') ||
-           element.tags.hasOwnProperty('highway') ||
-           element.tags.hasOwnProperty('building')));
-  });
-  // Explode OSM features to points and calculate convex hull
-  var convexHull = turf.convex({
-    'type': 'FeatureCollection',
-    'features': waysToSinglepoints(ways)
-      .concat(nodesToSinglepoints(nodes))
+  // Explode OSM features to points
+  var points = [];
+  changeset.elements.forEach(function(el) {
+    if (el.type && el.type == 'node') {
+      points.push({
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [el.lon, el.lat]
+        },
+        'properties': {}
+      });
+    } else if (el.nodes) {
+      el.nodes.forEach(function(n) {
+        points.push({
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [n.lon, n.lat]
+          },
+          'properties': {}
+        })
+      });
+    }
   });
 
-  return convexHull;
+  // Return as point (if 1), linestring (if 2 or 3) or polygon (4+)
+  if (points.length == 1) {
+    return {
+      'type': 'Feature',
+      'geometry': {
+        'type': 'Point',
+        'coordinates': points[0].geometry.coordinates
+      },
+      'properties': {}
+    }
+  } else if (points.length < 4) {
+    var ls = points.map(function (point) {
+      return point.geometry.coordinates
+    });
+    return {
+      'type': 'Feature',
+      'geometry': {
+        'type': 'LineString',
+        'coordinates': ls
+      },
+      'properties': {}
+    }
+  } else {
+    // calculate convex hull
+    var convexHull = turf.convex({
+      'type': 'FeatureCollection',
+      'features': points,
+    });
+    return convexHull;    
+  }
 };

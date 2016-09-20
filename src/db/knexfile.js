@@ -11,8 +11,8 @@ module.exports = {
       database: 'missingmaps'
     },
     pool: {
-      min: 1,
-      max: 25,
+      min: 0,
+      max: 25
     },
     acquireConnectionTimeout: 100000,
     migrations: {

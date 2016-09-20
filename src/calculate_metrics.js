@@ -11,7 +11,7 @@ var poiCount = require('./metrics/poi_count');
 var roadLength = require('./metrics/road_length');
 var roadLengthMod = require('./metrics/road_length_mod');
 var waterwayLength = require('./metrics/river_length');
-var extentBuffer = require('./metrics/geo_extent_buffer');
+var extentBuffer = require('./metrics/geo_extent_convexhull');
 var josmEdits = require('./metrics/josm_edits');
 
 var isNotRelation = function (element) {
@@ -46,7 +46,8 @@ module.exports = function (changeset, precision) {
 
   if (changeset.elements.length > 0) {
     var metadata = changeset.metadata;
-    var buf = extentBuffer(500)(changeset);
+    var buf = extentBuffer(changeset);
+    console.log("INFO: (changeset %s convexhull) ", metadata.id, JSON.stringify(buf) );
     return {
       id: Number(metadata.id),
       hashtags: metadata.comment.split(' '),
@@ -54,7 +55,6 @@ module.exports = function (changeset, precision) {
       user: {
         id: Number(metadata.uid),
         name: metadata.user,
-        avatar: '?', // todo: add avatar lookup
         geo_extent: buf
       },
       metrics: {
