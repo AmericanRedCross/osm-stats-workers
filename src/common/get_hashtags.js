@@ -26,7 +26,7 @@ function getHashtags(text){
   // I would imagine this would manifest as a type-o `# text` as opposed to `#text` or someone just bumped `# ` and didn't notice.
   var postFilteredHashTags = preFilteredHashtags.filter(
     function(hashtag) {
-      return !hashtag.includes(" ");
+      return hashtag.indexOf(" ") > 0;
     }
   );
 
