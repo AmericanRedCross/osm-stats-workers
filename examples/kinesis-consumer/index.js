@@ -31,7 +31,7 @@ exports.handler = function (event, context) {
       //return worker.destroy(function () {
         console.log('FAILURE: (%s)', changeset.metadata.id, err);
         console.trace();
-        return context.fail(err);
+        return context.succeed(err);
       //});
   });
 };
