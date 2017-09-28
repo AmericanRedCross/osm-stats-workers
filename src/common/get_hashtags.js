@@ -1,5 +1,5 @@
 /**
- * Given some text in the form of strings this extrats the #hashtags
+ * Given some text in the form of strings this extracts the #hashtags
  *
  * Worth mentioning is that the .filter is removeing anything that looks
  * like `# hashtag` as opposed to `#hashtag` I wanted to do that with the regex
@@ -15,24 +15,10 @@ function getHashtags(text){
 
   // Raw Extraction of Hashtags.
   var pattern = /#(.[a-zA-Z0-9-_]+)/g;
-  var preFilteredHashtags = text.match(pattern);
+  var hashtags = text.match(pattern) || [];
 
-  // Check to see if no hashtags exist.
-  if (!preFilteredHashtags) {
-    return [];
-  }
-
-  // This deals with the edgecase of `# hashtag`
-  // I would imagine this would manifest as a type-o `# text` as opposed to `#text` or someone just bumped `# ` and didn't notice.
-  var postFilteredHashTags = preFilteredHashtags.filter(
-    function(hashtag) {
-      return hashtag.indexOf(" ") > 0;
-    }
-  );
-
-  // removing duplicates
-  var hashtags = Array.from(new Set(postFilteredHashTags))
-  return hashtags;
+  // remove duplicates
+  return Array.from(new Set(hashtags));
 }
 
 module.exports = getHashtags;
