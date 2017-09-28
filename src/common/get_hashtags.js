@@ -4,17 +4,11 @@
  * @param  {String} text This is input text containing #hashtags
  * @return {Array}      A list of all hashtags if the list is empty then there are no hashtags or bad params were passed in.
  */
-function getHashtags(text){
-  if (!text) {
-    return [];
-  }
-
+function getHashtags (text) {
   // Raw Extraction of Hashtags.
-  var pattern = /#(.[a-zA-Z0-9-_]+)/g;
-  var hashtags = text.match(pattern) || [];
-
-  // remove duplicates
-  return Array.from(new Set(hashtags));
+  return Array.from(new Set((text || '').match(/(#[^\d][^#\s,]*)/g))).map(x =>
+    x.replace('#', '')
+  );
 }
 
 module.exports = getHashtags;
