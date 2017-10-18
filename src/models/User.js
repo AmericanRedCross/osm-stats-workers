@@ -85,6 +85,10 @@ var User = bookshelf.Model.extend({
   },
   getTaskingManagerStats: function (userId) {
     var userTaskStats = {done: 0, validated: 0, invalidated: 0};
+
+    // API endpoint below no longer works with TM3
+    return userTaskStats;
+
     return fetch('http://tasks.hotosm.org/user_data/' + userId + '.json')
     .then(function (user) {
       user = JSON.parse(user);
