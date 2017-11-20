@@ -59,7 +59,8 @@ Worker.prototype.addToDB = function (changeset) {
                 return user.updateBadges(metrics.metrics, t);
               });
           });
-      });
+      })
+      .catch(err => console.warn(`${err.message}: ${err.detail}`));
     })
     .catch(function (err) {
       component.logger(err, changeset);
