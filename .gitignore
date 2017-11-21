@@ -14,3 +14,4 @@ Icon
 
 .nyc_output/
 *.log
+dist/

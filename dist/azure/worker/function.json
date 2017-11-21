@@ -1,0 +1,14 @@
+{
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "messages",
+      "direction": "in",
+      "path": "osm-stats",
+      "connection": "osm-stats_RootManageSharedAccessKey_EVENTHUB",
+      "consumerGroup": "$Default",
+      "cardinality": "many"
+    }
+  ],
+  "disabled": false
+}
