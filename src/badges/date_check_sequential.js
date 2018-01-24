@@ -14,10 +14,7 @@ const BADGES = {
 function sequentializeDates(dates) {
   // Filter out non-unique dates
   const uniqueDates = R.uniq(
-    dates.map(date => {
-      const baseDate = new Date(date);
-      return baseDate.setHours(0, 0, 0, 0);
-    })
+    dates.map(date => new Date(date).setHours(0, 0, 0, 0))
   );
 
   let k = 0;
