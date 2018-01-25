@@ -1,12 +1,4 @@
-const R = require("ramda");
-
-const BADGES = {
-  daysTotal: {
-    name: "Year-Long Mapper",
-    id: 15,
-    tiers: { 1: 25, 2: 50, 3: 100 }
-  }
-};
+const BADGES = require(".");
 
 function checkBadgeLevel(uniqueDates, badge) {
   const uniqueDatesLength = uniqueDates.length;
@@ -34,7 +26,7 @@ module.exports = dates => {
   const truncatedDates = dates.map(date => new Date(date).setHours(0, 0, 0, 0));
 
   // Get unique dates and check badge level
-  const uniqueDates = R.uniq(truncatedDates);
+  const uniqueDates = Array.from(new Set(truncatedDates));
   const badgeLevel = checkBadgeLevel(uniqueDates, BADGES.daysTotal);
 
   const earnedBadges = {};

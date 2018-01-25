@@ -1,0 +1,4 @@
+// general housekeeping
+
+// REFRESH MATERIALIZED VIEW CONCURRENTLY user_stats
+// REFRESH MATERIALIZED VIEW CONCURRENTLY hashtag_stats

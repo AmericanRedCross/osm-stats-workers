@@ -1,13 +1,14 @@
-var Worker = require('../../../');
+// TODO switch to stream implementation
+const Worker = require("../../../");
 
 exports.handler = (context, messages) => {
-  context.log('processing %d message(s)', messages.length);
+  context.log("processing %d message(s)", messages.length);
 
-  var worker = new Worker(context.log);
+  const worker = new Worker(context.log);
   Promise.all(messages.map(msg => worker.addToDB(msg)))
     .then(output => {
-      context.log('Output:', output);
-      context.done();
+      context.log("Output:", output);
+      return context.done();
     })
     .catch(context.done);
 };

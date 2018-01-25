@@ -1,20 +1,12 @@
-const R = require("ramda");
-
-const BADGES = {
-  daysInRow: {
-    name: "Consistency",
-    id: 14,
-    tiers: { 1: 5, 2: 20, 3: 50 }
-  }
-};
+const BADGES = require(".");
 
 // function takes array of dates and returns an array of arrays
 // containing each sequential date
 // http://stackoverflow.com/questions/16690905/javascript-get-sequential-dates-in-array
 function sequentializeDates(dates) {
   // Filter out non-unique dates
-  const uniqueDates = R.uniq(
-    dates.map(date => new Date(date).setHours(0, 0, 0, 0))
+  const uniqueDates = Array.from(
+    new Set(dates.map(date => new Date(date).setHours(0, 0, 0, 0)))
   );
 
   let k = 0;
