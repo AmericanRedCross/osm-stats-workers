@@ -21,3 +21,5 @@ CREATE MATERIALIZED VIEW hashtag_stats AS
   JOIN raw_changesets c ON c.id = ch.changeset_id
   JOIN raw_hashtags h ON h.id = ch.hashtag_id
   GROUP BY hashtag;
+
+CREATE UNIQUE INDEX hashtag_stats_hashtag ON hashtag_stats(hashtag);

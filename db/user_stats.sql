@@ -20,3 +20,5 @@ CREATE MATERIALIZED VIEW user_stats AS
     max(coalesce(closed_at, created_at)) updated_at
   FROM changesets2
   GROUP BY user_id;
+
+CREATE UNIQUE INDEX user_stats_user_id ON user_stats(user_id);
