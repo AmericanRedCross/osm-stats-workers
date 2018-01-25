@@ -18,7 +18,8 @@ CREATE MATERIALIZED VIEW user_stats AS
       ELSE 0
       END) josm_edits,
     max(coalesce(closed_at, created_at)) updated_at
-  FROM changesets2
+  FROM raw_changesets
+  WHERE user_id IS NOT NULL
   GROUP BY user_id;
 
 CREATE UNIQUE INDEX user_stats_user_id ON user_stats(user_id);
