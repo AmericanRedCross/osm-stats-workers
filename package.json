@@ -5,10 +5,12 @@
   "scripts": {
     "test": "npm run lint && NODE_ENV=test tap test/*.test.js test/*/*.test.js --cov",
     "lint": "eslint index.js src/*",
-    "dbinit": "./bin/database_init.sh",
     "azure-pack": "NODE_ENV=production webpack --progress --display-optimization-bailout --config webpack.config.js",
     "clean": "rm -f dist/azure/worker/index.js*",
-    "azure-publish": "npm run azure-pack && gh-pages -d dist/azure -b azure"
+    "azure-publish": "npm run azure-pack && gh-pages -d dist/azure -b azure",
+    "housekeeping": "node bin/housekeeping.js",
+    "osm-changes": "node bin/osm-changes.js",
+    "update-badges": "node bin/update-badges.js"
   },
   "author": "",
   "license": "BSD-3-Clause",
@@ -41,6 +43,7 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "gh-pages": "^1.1.0",
+    "pgexplode": "^1.0.1",
     "prettier": "^1.10.2",
     "tap": "^2.3.1",
     "webpack": "^3.8.1"

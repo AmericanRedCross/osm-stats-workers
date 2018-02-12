@@ -71,7 +71,7 @@ const statUpdater = stats => {
       [
         [
           `
-INSERT INTO changesets2 AS c (
+INSERT INTO raw_changesets AS c (
   id,
   roads_added,
   roads_modified,
@@ -85,9 +85,10 @@ INSERT INTO changesets2 AS c (
   road_km_modified,
   waterway_km_added,
   waterway_km_modified,
-  augmented_diffs
+  augmented_diffs,
+  updated_at
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, current_timestamp
 )
 ON CONFLICT (id) DO UPDATE
 SET
@@ -103,7 +104,8 @@ SET
   road_km_modified = c.road_km_modified + $11,
   waterway_km_added = c.waterway_km_added + $12,
   waterway_km_modified = c.waterway_km_modified + $13,
-  augmented_diffs = coalesce(c.augmented_diffs, ARRAY[]::integer[]) || $14
+  augmented_diffs = coalesce(c.augmented_diffs, ARRAY[]::integer[]) || $14,
+  updated_at = current_timestamp
 WHERE c.id = $1
   AND NOT coalesce(c.augmented_diffs, ARRAY[]::integer[]) && $14
           `,
@@ -128,11 +130,11 @@ WHERE c.id = $1
         .concat(
           stats[changeset].countries.map(code => [
             `
-INSERT INTO changesets_countries2 (
+INSERT INTO raw_changesets_countries (
   changeset_id,
   country_id
 ) VALUES (
-  $1, (SELECT id FROM countries WHERE code = $2)
+  $1, (SELECT id FROM raw_countries WHERE code = $2)
 )
 ON CONFLICT DO NOTHING
           `,
@@ -188,7 +190,7 @@ const changesetUpdater = changeset => {
   const queries = [
     [
       `
-INSERT INTO changesets2 AS c (
+INSERT INTO raw_changesets AS c (
   id,
   editor,
   user_id,
@@ -205,23 +207,25 @@ INSERT INTO changesets2 AS c (
   road_km_added,
   road_km_modified,
   waterway_km_added,
-  waterway_km_modified
+  waterway_km_modified,
+  updated_at
 ) VALUES (
-  $1, $2, $3, $4, $5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  $1, $2, $3, $4, $5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, current_timestamp
 )
 ON CONFLICT (id) DO UPDATE
 SET
   editor = $2,
   user_id = $3,
   created_at = $4,
-  closed_at = $5
+  closed_at = $5,
+  updated_at = current_timestamp
 WHERE c.id = $1
       `,
       [id, editor, uid, createdAt, closedAt]
     ],
     [
       `
-INSERT INTO users2 AS u (
+INSERT INTO raw_users AS u (
   id,
   name
 ) VALUES (
@@ -253,7 +257,7 @@ WITH input_rows("hashtag") AS (
   VALUES ($1)
 ),
 ins AS (
-  INSERT INTO hashtags2 AS h (hashtag)
+  INSERT INTO raw_hashtags AS h (hashtag)
   VALUES ($1)
   ON CONFLICT DO NOTHING
   RETURNING id
@@ -263,7 +267,7 @@ FROM ins
 UNION ALL
 SELECT id
 FROM input_rows
-JOIN hashtags2 USING(hashtag)
+JOIN raw_hashtags USING(hashtag)
                 `,
                 [hashtag]
               ),
@@ -272,7 +276,7 @@ JOIN hashtags2 USING(hashtag)
 
                 return client.query(
                   `
-INSERT INTO changesets_hashtags2 (
+INSERT INTO raw_changesets_hashtags (
   changeset_id,
   hashtag_id
 ) VALUES ($1, $2)
