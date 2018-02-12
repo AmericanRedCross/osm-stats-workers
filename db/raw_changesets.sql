@@ -17,5 +17,6 @@ CREATE TABLE raw_changesets (
     created_at timestamp with time zone,
     closed_at timestamp with time zone,
     verified boolean DEFAULT false,
+    augmented_diffs integer[],
     PRIMARY KEY(id)
 );

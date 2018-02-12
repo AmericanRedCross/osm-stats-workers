@@ -70,7 +70,8 @@ module.exports = class StatsStream extends Transform {
         roadKmAdded: roadKmAdded(feature),
         waterwayKmAdded: waterwayKmAdded(feature),
         poisAdded: poisAdded(feature),
-        countries: countries(feature)
+        countries: countries(feature),
+        augmentedDiffs: [feature.properties.augmentedDiff]
       }
     });
 
@@ -94,7 +95,8 @@ module.exports = class StatsStream extends Transform {
         roadKmModified: roadKmModified(prev, next),
         waterwayKmModified: waterwayKmModified(prev, next),
         poisModified: poisModified(next),
-        countries: countries(next)
+        countries: countries(next),
+        augmentedDiffs: [next.properties.augmentedDiff]
       }
     });
 
@@ -118,7 +120,8 @@ module.exports = class StatsStream extends Transform {
         roadKmModified: roadKmDeleted(prev),
         waterwayKmModified: waterwayKmDeleted(prev),
         poisModified: poisModified(prev),
-        countries: countries(prev)
+        countries: countries(prev),
+        augmentedDiffs: [next.properties.augmentedDiff]
       }
     });
 
@@ -142,7 +145,8 @@ module.exports = class StatsStream extends Transform {
         roadKmModified: roadKmModified(prev, next),
         waterwayKmModified: waterwayKmModified(prev, next),
         poisModified: poisModified(next),
-        countries: countries(next)
+        countries: countries(next),
+        augmentedDiffs: [next.properties.augmentedDiff]
       }
     });
 

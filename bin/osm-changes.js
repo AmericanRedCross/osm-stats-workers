@@ -52,6 +52,20 @@ const summarizer = batch =>
   );
 
 const statUpdater = stats => {
+  const lastAugmentedDiff = Math.max.apply(
+    null,
+    Array.from(
+      new Set(
+        Object.keys(stats).reduce(
+          (acc, k) => acc.concat(stats[k].augmentedDiffs),
+          []
+        )
+      )
+    )
+  );
+
+  console.warn(`Checkpointing augmented diffs @ ${lastAugmentedDiff}.`);
+
   const queries = Object.keys(stats)
     .map(changeset =>
       [
@@ -70,9 +84,10 @@ INSERT INTO changesets2 AS c (
   road_km_added,
   road_km_modified,
   waterway_km_added,
-  waterway_km_modified
+  waterway_km_modified,
+  augmented_diffs
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
 )
 ON CONFLICT (id) DO UPDATE
 SET
@@ -87,8 +102,10 @@ SET
   road_km_added = c.road_km_added + $10,
   road_km_modified = c.road_km_modified + $11,
   waterway_km_added = c.waterway_km_added + $12,
-  waterway_km_modified = c.waterway_km_modified + $13
+  waterway_km_modified = c.waterway_km_modified + $13,
+  augmented_diffs = coalesce(c.augmented_diffs, ARRAY[]::integer[]) || $14
 WHERE c.id = $1
+  AND NOT coalesce(c.augmented_diffs, ARRAY[]::integer[]) && $14
           `,
           [
             Number(changeset),
@@ -103,12 +120,14 @@ WHERE c.id = $1
             stats[changeset].roadKmAdded || 0,
             stats[changeset].roadKmModified || 0,
             stats[changeset].waterwayKmAdded || 0,
-            stats[changeset].waterwayKmModified || 0
+            stats[changeset].waterwayKmModified || 0,
+            stats[changeset].augmentedDiffs
           ]
         ]
-      ].concat(
-        stats[changeset].countries.map(code => [
-          `
+      ]
+        .concat(
+          stats[changeset].countries.map(code => [
+            `
 INSERT INTO changesets_countries2 (
   changeset_id,
   country_id
@@ -117,9 +136,19 @@ INSERT INTO changesets_countries2 (
 )
 ON CONFLICT DO NOTHING
           `,
-          [Number(changeset), code]
+            [Number(changeset), code]
+          ])
+        )
+        .concat([
+          [
+            `
+UPDATE augmented_diff_status
+SET id=$1,
+  updated_at=current_timestamp
+    `,
+            [lastAugmentedDiff]
+          ]
         ])
-      )
     )
     .reduce((acc, a) => acc.concat(a), []);
 
@@ -263,24 +292,6 @@ ON CONFLICT DO NOTHING
   });
 };
 
-const checkpointAugmentedDiffs = sequenceNumber => {
-  console.warn(`Augmented diff ${sequenceNumber} fetched.`);
-
-  client.query(
-    `
-UPDATE augmented_diff_status
-SET id=$1,
-  updated_at=current_timestamp
-  `,
-    [Number(sequenceNumber)],
-    err => {
-      if (err) {
-        console.warn(err.stack);
-      }
-    }
-  );
-};
-
 const getInitialAugmentedDiffSequenceNumber = callback =>
   client.query("SELECT id FROM augmented_diff_status", (err, results) => {
     if (err) {
@@ -291,7 +302,7 @@ const getInitialAugmentedDiffSequenceNumber = callback =>
   });
 
 const checkpointChangesets = sequenceNumber => {
-  console.warn(`Changeset ${sequenceNumber} fetched.`);
+  console.warn(`Checkpointing changesets @ ${sequenceNumber}.`);
 
   client.query(
     `
@@ -331,11 +342,10 @@ async.parallel(
     }
 
     const adiffs = AugmentedDiffs({
-      initialSequence: initialAugmentedDiffSequenceNumber,
+      baseURL: "http://export.hotosm.org:6080",
+      initialSequence: initialAugmentedDiffSequenceNumber + 1,
       infinite: true,
-      // TODO checkpoint when a sequence has been fully processed not just seen
-      checkpoint: checkpointAugmentedDiffs,
-      delay: 15e3
+      delay: 1e3
     });
 
     _(
@@ -343,7 +353,47 @@ async.parallel(
         .pipe(new AugmentedDiffParser().on("error", console.warn))
         .pipe(new StatsStream())
     )
-      .batchWithTimeOrCount(100, 1000)
+      // batch by sequence
+      .through(s => {
+        let batched = [];
+        let sequence = null;
+
+        return s.consume((err, x, push, next) => {
+          if (err) {
+            push(err);
+            return next();
+          }
+
+          if (x === _.nil) {
+            // end of the stream; flush
+            if (batched.length > 0) {
+              push(null, batched);
+            }
+
+            return push(null, _.nil);
+          }
+
+          const { stats: { augmentedDiffs } } = x;
+
+          if (sequence !== augmentedDiffs[0]) {
+            // new sequence; flush previous
+            if (batched.length > 0) {
+              push(null, batched);
+            }
+
+            // reset batch
+            batched = [x];
+            sequence = augmentedDiffs.shift();
+
+            return next();
+          }
+
+          // add this item to the batch
+          batched.push(x);
+
+          return next();
+        });
+      })
       .map(summarizer)
       .flatMap(statUpdater)
       .done(() => client.end());
