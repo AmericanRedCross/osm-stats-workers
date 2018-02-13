@@ -19,35 +19,33 @@
   },
   "dependencies": {
     "@turf/buffer": "^5.1.5",
-    "@turf/helpers": "^6.0.0-beta.3",
+    "@turf/helpers": "^6.0.1",
     "@turf/length": "^5.1.5",
     "@turf/meta": "^6.0.1",
-    "ajv": "^5.5.2",
     "async": "^2.6.0",
     "babel-polyfill": "^6.26.0",
     "epipebomb": "^1.0.0",
     "geojson-rbush": "^3.1.0",
     "highland": "^2.11.1",
-    "martinez-polygon-clipping": "^0.3.2",
+    "martinez-polygon-clipping": "^0.3.3",
     "node": "^6.12.3",
     "osm-replication-streams": "^0.6.1",
     "osm2obj": "^3.0.0",
     "pg": "^7.4.1",
     "pg-query-stream": "^1.1.1",
-    "ramda": "^0.19.0",
     "require-env": "^0.2.1"
   },
   "devDependencies": {
-    "eslint": "^4.15.0",
+    "eslint": "^4.17.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-node": "^6.0.0",
     "eslint-plugin-promise": "^3.6.0",
     "gh-pages": "^1.1.0",
     "pgexplode": "^1.0.1",
     "prettier": "^1.10.2",
-    "tap": "^2.3.1",
-    "webpack": "^3.8.1"
+    "tap": "^11.1.0",
+    "webpack": "^3.11.0"
   }
 }
