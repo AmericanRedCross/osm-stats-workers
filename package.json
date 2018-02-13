@@ -10,7 +10,8 @@
     "azure-publish": "npm run azure-pack && gh-pages -d dist/azure -b azure",
     "housekeeping": "node bin/housekeeping.js",
     "osm-changes": "node bin/osm-changes.js",
-    "update-badges": "node bin/update-badges.js"
+    "update-badges": "node bin/update-badges.js",
+    "start": "npm run osm-changes"
   },
   "author": "",
   "license": "BSD-3-Clause",
