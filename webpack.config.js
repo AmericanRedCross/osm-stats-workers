@@ -4,10 +4,12 @@ const webpack = require("webpack");
 
 const config = {
   target: "node",
-  entry: "./functions/azure/worker/index.js",
+  entry: {
+    housekeeping: "./functions/azure/housekeeping/index.js"
+  },
   output: {
-    path: path.resolve(__dirname, "dist", "azure", "worker"),
-    filename: "index.js",
+    path: path.resolve(__dirname, "dist", "azure"),
+    filename: "[name]/index.js",
     libraryTarget: "commonjs-module"
   },
   devtool: "eval",
@@ -16,19 +18,7 @@ const config = {
     extensions: [".js"]
   },
   externals: {
-    // Possible drivers for knex - we'll ignore them
-    sqlite3: "sqlite3",
-    mariasql: "mariasql",
-    mssql: "mssql",
-    mysql: "mysql",
-    mysql2: "mysql2",
-    oracle: "oracle",
-    oracledb: "oracledb",
-    "strong-oracle": "strong-oracle",
-    "pg-native": "pg-native",
-    "pg-query-stream": "pg-query-stream",
-    // for request-promise
-    "cls-bluebird": "cls-bluebird"
+    "pg-native": "pg-native"
   }
 };
 
