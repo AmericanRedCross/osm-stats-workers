@@ -14,7 +14,7 @@ CREATE MATERIALIZED VIEW user_stats AS
     sum(pois_added) pois_added,
     sum(pois_modified) pois_modified,
     sum(CASE
-      WHEN array_length(regexp_match(editor, '(?i)josm'), 1) > 0 THEN 1
+      WHEN array_length(ARRAY[regexp_matches(editor, '(?i)josm')], 1) > 0 THEN 1
       ELSE 0
       END) josm_edits,
     max(coalesce(closed_at, created_at)) updated_at
