@@ -1,6 +1,8 @@
 const POI_TAGS = ["amenity", "shop", "craft", "office", "leisure", "aeroway"];
 const WATERWAY_VALUES = ["river", "canal", "stream", "brook", "drain", "ditch"];
 
+module.exports.NOOP = () => {};
+
 module.exports.isBuilding = ({ properties: { tags } }) =>
   tags.building != null &&
   !["no", "false", "0"].includes(tags.building.toLowerCase());

@@ -1,4 +1,4 @@
-const BADGES = require(".");
+const BADGES = require("./badges");
 
 // function takes array of dates and returns an array of arrays
 // containing each sequential date

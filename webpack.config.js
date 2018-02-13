@@ -5,7 +5,8 @@ const webpack = require("webpack");
 const config = {
   target: "node",
   entry: {
-    housekeeping: "./functions/azure/housekeeping/index.js"
+    housekeeping: "./functions/azure/housekeeping/index.js",
+    "update-badges": "./functions/azure/update-badges/index.js"
   },
   output: {
     path: path.resolve(__dirname, "dist", "azure"),

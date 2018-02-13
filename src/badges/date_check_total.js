@@ -1,4 +1,4 @@
-const BADGES = require(".");
+const BADGES = require("./badges");
 
 function checkBadgeLevel(uniqueDates, badge) {
   const uniqueDatesLength = uniqueDates.length;

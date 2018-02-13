@@ -2,7 +2,7 @@ const async = require("async");
 const env = require("require-env");
 const { Client } = require("pg");
 
-const NOOP = () => {};
+const { NOOP } = require(".");
 
 const client = new Client(env.require("DATABASE_URL"));
 

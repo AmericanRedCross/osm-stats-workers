@@ -1,4 +1,4 @@
-const BADGES = require(".");
+const BADGES = require("./badges");
 
 function checkBadgeLevel(userTotal, badge) {
   if (userTotal >= badge.tiers[1] && userTotal < badge.tiers[2]) {
