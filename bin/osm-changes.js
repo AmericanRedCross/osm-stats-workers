@@ -10,6 +10,5 @@ process.on("unhandledRejection", err => {
 });
 
 stats({
-  delay: 1e3,
   infinite: true
 });
