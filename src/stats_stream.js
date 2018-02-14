@@ -36,6 +36,11 @@ module.exports = class StatsStream extends Transform {
   }
 
   _transform(obj, _, callback) {
+    if (obj.type === "Marker") {
+      this.push(obj);
+      return callback();
+    }
+
     switch (obj.id) {
       case "create":
         return this.handleCreate(obj, callback);

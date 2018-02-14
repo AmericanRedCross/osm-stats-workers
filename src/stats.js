@@ -403,17 +403,25 @@ module.exports = (options, callback) => {
                     return push(null, _.nil);
                   }
 
-                  const { stats: { augmentedDiffs } } = x;
+                  let activeSequence = sequence;
 
-                  if (sequence !== augmentedDiffs[0]) {
+                  if (x.stats != null) {
+                    ([activeSequence] = x.stats.augmentedDiffs);
+                  }
+
+                  if (x.type === "Marker" || sequence !== activeSequence) {
                     // new sequence; flush previous
                     if (batched.length > 0) {
                       push(null, batched);
                     }
 
                     // reset batch
-                    batched = [x];
-                    sequence = augmentedDiffs.shift();
+                    if (x.type !== "Marker") {
+                      batched = [x];
+                    } else {
+                      batched = [];
+                    }
+                    sequence = activeSequence;
 
                     return next();
                   }
