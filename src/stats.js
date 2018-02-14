@@ -351,7 +351,7 @@ const getInitialChangesetSequenceNumber = callback =>
 
 module.exports = (options, callback) => {
   const opts = Object.assign({}, {
-    delay: 30e3,
+    delay: 15e3,
     infinite: true
   }, options);
 
