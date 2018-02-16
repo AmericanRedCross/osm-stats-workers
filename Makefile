@@ -32,9 +32,11 @@ db: DATABASE_URL
 	@psql -c "SELECT 1" > /dev/null 2>&1 || \
 	createdb
 
-db/all: db/augmented_diff_status db/badges db/badges_users db/changesets_status db/changesets db/hashtags db/hashtag_stats db/raw_changesets_countries db/raw_changesets_hashtags db/raw_changesets db/raw_countries db/raw_hashtags db/raw_users db/user_stats db/users
+db/all: db/augmented_diff_status db/badges db/badges_users db/changesets_status db/changesets db/changesets_hashtags db/hashtags db/hashtag_stats db/raw_changesets_countries db/raw_changesets_hashtags db/raw_changesets db/raw_countries db/raw_hashtags db/raw_users db/user_stats db/users
 
 db/changesets: db/raw_changesets
+
+db/changesets_hashtags: db/raw_changesets_hashtags
 
 db/hashtags: db/raw_hashtags
 
