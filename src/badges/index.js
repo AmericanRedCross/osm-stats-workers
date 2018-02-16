@@ -137,6 +137,7 @@ module.exports.updateBadges = callback => {
     user_id,
     array_agg(DISTINCT date_trunc('day', created_at)) timestamps
   FROM raw_changesets
+  WHERE created_at IS NOT NULL
   GROUP BY user_id
     `);
 
