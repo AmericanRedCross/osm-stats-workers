@@ -61,9 +61,12 @@ const merge = (a, b) =>
 
 const summarizer = batch =>
   batch.reduce(
-    (acc, { changeset, stats }) =>
+    (acc, { changeset, stats, uid, user }) =>
       Object.assign({}, acc, {
-        [changeset]: merge(acc[changeset] || {}, stats)
+        [changeset]: Object.assign({}, merge(acc[changeset] || {}, stats), {
+          uid,
+          user
+        })
       }),
     {}
   );
@@ -90,6 +93,7 @@ const statUpdater = stats => {
           `
 INSERT INTO raw_changesets AS c (
   id,
+  user_id,
   roads_added,
   roads_modified,
   waterways_added,
@@ -105,29 +109,30 @@ INSERT INTO raw_changesets AS c (
   augmented_diffs,
   updated_at
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, current_timestamp
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, current_timestamp
 )
 ON CONFLICT (id) DO UPDATE
 SET
-  roads_added = c.roads_added + $2,
-  roads_modified = c.roads_modified + $3,
-  waterways_added = c.waterways_added + $4,
-  waterways_modified = c.waterways_modified + $5,
-  buildings_added = c.buildings_added + $6,
-  buildings_modified = c.buildings_modified + $7,
-  pois_added = c.pois_added + $8,
-  pois_modified = c.pois_modified + $9,
-  road_km_added = c.road_km_added + $10,
-  road_km_modified = c.road_km_modified + $11,
-  waterway_km_added = c.waterway_km_added + $12,
-  waterway_km_modified = c.waterway_km_modified + $13,
-  augmented_diffs = coalesce(c.augmented_diffs, ARRAY[]::integer[]) || $14,
+  roads_added = c.roads_added + $3,
+  roads_modified = c.roads_modified + $4,
+  waterways_added = c.waterways_added + $5,
+  waterways_modified = c.waterways_modified + $6,
+  buildings_added = c.buildings_added + $7,
+  buildings_modified = c.buildings_modified + $8,
+  pois_added = c.pois_added + $9,
+  pois_modified = c.pois_modified + $10,
+  road_km_added = c.road_km_added + $11,
+  road_km_modified = c.road_km_modified + $12,
+  waterway_km_added = c.waterway_km_added + $13,
+  waterway_km_modified = c.waterway_km_modified + $14,
+  augmented_diffs = coalesce(c.augmented_diffs, ARRAY[]::integer[]) || $15,
   updated_at = current_timestamp
 WHERE c.id = $1
-  AND NOT coalesce(c.augmented_diffs, ARRAY[]::integer[]) && $14
+  AND NOT coalesce(c.augmented_diffs, ARRAY[]::integer[]) && $15
           `,
           [
             Number(changeset),
+            Number(stats[changeset].uid),
             stats[changeset].roadsAdded || 0,
             stats[changeset].roadsModified || 0,
             stats[changeset].waterwaysAdded || 0,
@@ -142,6 +147,21 @@ WHERE c.id = $1
             stats[changeset].waterwayKmModified || 0,
             stats[changeset].augmentedDiffs
           ]
+        ],
+        [
+          `
+INSERT INTO raw_users AS u (
+  id,
+  name
+) VALUES (
+  $1, $2
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  name = $2
+WHERE u.id = $1
+      `,
+          [Number(stats[changeset].uid), stats[changeset].user]
         ]
       ]
         .concat(
@@ -350,10 +370,14 @@ const getInitialChangesetSequenceNumber = callback =>
   });
 
 module.exports = (options, callback) => {
-  const opts = Object.assign({}, {
-    delay: 15e3,
-    infinite: true
-  }, options);
+  const opts = Object.assign(
+    {},
+    {
+      delay: 15e3,
+      infinite: true
+    },
+    options
+  );
 
   callback = callback || NOOP;
 
@@ -406,7 +430,7 @@ module.exports = (options, callback) => {
                   let activeSequence = sequence;
 
                   if (x.stats != null) {
-                    ([activeSequence] = x.stats.augmentedDiffs);
+                    [activeSequence] = x.stats.augmentedDiffs;
                   }
 
                   if (x.type === "Marker" || sequence !== activeSequence) {

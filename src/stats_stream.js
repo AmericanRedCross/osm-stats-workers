@@ -77,7 +77,9 @@ module.exports = class StatsStream extends Transform {
         poisAdded: poisAdded(feature),
         countries: countries(feature),
         augmentedDiffs: [feature.properties.augmentedDiff]
-      }
+      },
+      uid: feature.properties.uid,
+      user: feature.properties.user
     });
 
     return callback();
@@ -102,7 +104,9 @@ module.exports = class StatsStream extends Transform {
         poisModified: poisModified(next),
         countries: countries(next),
         augmentedDiffs: [next.properties.augmentedDiff]
-      }
+      },
+      uid: next.properties.uid,
+      user: next.properties.user
     });
 
     return callback();
@@ -127,7 +131,9 @@ module.exports = class StatsStream extends Transform {
         poisModified: poisModified(prev),
         countries: countries(prev),
         augmentedDiffs: [next.properties.augmentedDiff]
-      }
+      },
+      uid: next.properties.uid,
+      user: next.properties.user
     });
 
     return callback();
@@ -152,7 +158,9 @@ module.exports = class StatsStream extends Transform {
         poisModified: poisModified(next),
         countries: countries(next),
         augmentedDiffs: [next.properties.augmentedDiff]
-      }
+      },
+      uid: next.properties.uid,
+      user: next.properties.user
     });
 
     return callback();
