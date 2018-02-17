@@ -1,0 +1,33 @@
+version: '3'
+services:
+  stats:
+    build:
+      context: .
+      args:
+        - NODE_ENV=development
+    depends_on:
+      - postgresql
+    environment:
+      - DATABASE_URL=postgresql://mm:mm@postgresql/mm
+    env_file: .env
+    volumes:
+      - ./bin:/opt/app/bin
+      - ./sql:/opt/app/sql
+      - ./src:/opt/app/src
+      - ./Makefile:/opt/app/Makefile
+      - ./package.json:/opt/app/package.json
+    ports:
+      - "3000:3000"
+    links:
+      - postgresql
+    command: nodemon bin/osm-changes.js
+  postgresql:
+    image: mdillon/postgis:9.6
+    environment:
+      - POSTGRES_USER=mm
+      - POSTGRES_PASSWORD=mm
+      - POSTGRES_DB=mm
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

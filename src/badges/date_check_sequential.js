@@ -1,68 +1,60 @@
-var R = require('ramda');
+const BADGES = require("./badges");
 
-module.exports = function (dates) {
-  var badges = {
-    daysInRow: {
-      name: 'Consistency',
-      id: 14,
-      tiers: {1: 5, 2: 20, 3: 50}
+// function takes array of dates and returns an array of arrays
+// containing each sequential date
+// http://stackoverflow.com/questions/16690905/javascript-get-sequential-dates-in-array
+function sequentializeDates(dates) {
+  // Filter out non-unique dates
+  const uniqueDates = Array.from(
+    new Set(dates.map(date => new Date(date).setHours(0, 0, 0, 0)))
+  );
+
+  let k = 0;
+  const sorted = [];
+  sorted[k] = [];
+
+  uniqueDates.sort((a, b) => a - b).forEach((v, i) => {
+    const a = v;
+    const b = uniqueDates[i + 1] || 0;
+    sorted[k].push(+a);
+
+    if (b - a > 86400e3) {
+      sorted[++k] = [];
     }
-  };
+  });
 
-  // function takes array of dates and returns an array of arrays
-  // containing each sequential date
-  // http://stackoverflow.com/questions/16690905/javascript-get-sequential-dates-in-array
-  function sequentializeDates (dates) {
-    // Filter out non-unique dates
-    dates = R.uniq(
-      dates.map(function (date) {
-        date = new Date(date);
-        return date.setHours(0, 0, 0, 0);
-      })
-    );
+  return sorted.sort((a, b) => a.length - b.length);
+}
 
-    var k = 0;
-    var sorted = [];
-    sorted[k] = [];
-    dates.sort(function (a, b) {
-      return +a > +b ? 1 : +a === +b ? 0 : -1;
-    })
-    .forEach(function (v, i) {
-      var a = v;
-      var b = dates[i + 1] || 0;
-      sorted[k].push(+a);
-      if ((+b - +a) > 86400000) {
-        sorted[++k] = [];
-      }
+function checkBadgeLevel(sequentialDates, badge) {
+  for (let i = 0; i < sequentialDates.length; ++i) {
+    const dayStreakLength = sequentialDates[i].length;
+
+    if (dayStreakLength >= badge.tiers[1] && dayStreakLength < badge.tiers[2]) {
       return 1;
-    });
-    sorted.sort(function (a, b) {
-      return a.length > b.length ? -1 : 1;
-    });
-    return sorted;
-  }
+    }
 
-  function checkBadgeLevel (sequentialDates, badge) {
-    for (var i = 0; i < sequentialDates.length; ++i) {
-      var dayStreakLength = sequentialDates[i].length;
-      if (dayStreakLength >= badge.tiers[1] && dayStreakLength < badge.tiers[2]) {
-        return 1;
-      } else if (dayStreakLength >= badge.tiers[2] && dayStreakLength < badge.tiers[3]) {
-        return 2;
-      } else if (dayStreakLength >= badge.tiers[3]) {
-        return 3;
-      } else {
-        return null;
-      }
+    if (dayStreakLength >= badge.tiers[2] && dayStreakLength < badge.tiers[3]) {
+      return 2;
+    }
+
+    if (dayStreakLength >= badge.tiers[3]) {
+      return 3;
     }
   }
+}
 
-  var sequentialDates = sequentializeDates(dates);
-  var badgeLevel = checkBadgeLevel(sequentialDates, badges.daysInRow);
+module.exports = dates => {
+  const sequentialDates = sequentializeDates(dates);
+  const badgeLevel = checkBadgeLevel(sequentialDates, BADGES.daysInRow);
 
-  var earnedBadges = {};
-  if (badgeLevel !== null) {
-    earnedBadges['consistency'] = {category: 14, level: badgeLevel};
+  const earnedBadges = {};
+
+  if (badgeLevel != null) {
+    earnedBadges.consistency = {
+      category: 14,
+      level: badgeLevel
+    };
   }
 
   return earnedBadges;
