@@ -237,83 +237,83 @@ COPY raw_countries (id, name, code) FROM stdin;
 230	South Africa	ZAF
 231	Zambia	ZMB
 232	Zimbabwe	ZWE
-233	\N	ABW
-234	\N	AIA
-235	\N	ALD
-236	\N	AND
-237	\N	ASM
-238	\N	ATC
-239	\N	ATG
-240	\N	BHR
-241	\N	BJN
-242	\N	BLM
-243	\N	BRB
-244	\N	CLP
-245	\N	CNM
-246	\N	COK
-247	\N	COM
-248	\N	CPV
-249	\N	CSI
-250	\N	CUW
-251	\N	CYM
-252	\N	DMA
-253	\N	ESB
-254	\N	FRO
-255	\N	FSM
-256	\N	GGY
-257	\N	GIB
-258	\N	GRD
-259	\N	GUM
-260	\N	HKG
-261	\N	HMD
-262	\N	IMN
-263	\N	IOA
-264	\N	IOT
-265	\N	JEY
-266	\N	KAB
-267	\N	KAS
-268	\N	KIR
-269	\N	KNA
-270	\N	LCA
-271	\N	LIE
-272	\N	MAC
-273	\N	MAF
-274	\N	MCO
-275	\N	MDV
-276	\N	MHL
-277	\N	MLT
-278	\N	MNP
-279	\N	MSR
-280	\N	MUS
-281	\N	NFK
-282	\N	NIU
-283	\N	NRU
-284	\N	PCN
-285	\N	PGA
-286	\N	PLW
-287	\N	PSX
-288	\N	PYF
-289	\N	SAH
-290	\N	SCR
-291	\N	SER
-292	\N	SGS
-293	\N	SHN
-294	\N	SMR
-295	\N	SOL
-296	\N	SPM
-297	\N	STP
-298	\N	SXM
-299	\N	SYC
-300	\N	TCA
-301	\N	TON
-302	\N	TUV
-303	\N	UMI
-304	\N	USG
-305	\N	VAT
-306	\N	VCT
-307	\N	VGB
-308	\N	VIR
-309	\N	WLF
-310	\N	WSB
-311	\N	WSM
+233	Aruba ABW
+234	Anguilla	AIA
+235	Åland Islands	ALD
+236	Andorra	AND
+237	American Samoa	ASM
+238	Ashmore and Cartier Islands	ATC
+239	Antigua and Barbuda	ATG
+240	Bahrain	BHR
+241	Bajo Nuevo Bank (Petrel Islands)	BJN
+242	Saint-Barthélemy	BLM
+243	Barbados	BRB
+244	Clipperton Island	CLP
+245	Cyprus U.N. Buffer Zone	CNM
+246	Cook Islands	COK
+247	Comoros	COM
+248	Republic of Cabo Verde	CPV
+249	Coral Sea Islands	CSI
+250	Curaçao	CUW
+251	Cayman Islands	CYM
+252	Dominica	DMA
+253	Dhekelia	ESB
+254	Faeroe Islands	FRO
+255	Federated States of Micronesia	FSM
+256	Guernsey	GGY
+257	Gibraltar	GIB
+258	Grenada	GRD
+259	Guam	GUM
+260	Hong Kong	HKG
+261	Heard Island and McDonald Islands	HMD
+262	Isle of Man	IMN
+263	Indian Ocean Territories	IOA
+264	British Indian Ocean Territory	IOT
+265	Jersey	JEY
+266	Baikonur Cosmodrome	KAB
+267	Siachen Glacier	KAS
+268	Kiribati	KIR
+269	Saint Kitts and Nevis	KNA
+270	Saint Lucia	LCA
+271	Liechtenstein	LIE
+272	Macao	MAC
+273	Saint-Martin	MAF
+274	Monaco	MCO
+275	Maldives	MDV
+276	Marshall Islands	MHL
+277	Malta	MLT
+278	Northern Mariana Islands	MNP
+279	Montserrat	MSR
+280	Mauritius	MUS
+281	Norfolk Island	NFK
+282	Niue	NIU
+283	Nauru	NRU
+284	Pitcairn Islands	PCN
+285	Spratly Islands	PGA
+286	Palau	PLW
+287	Palestine	PSX
+288	French Polynesia	PYF
+289	Western Sahara	SAH
+290	Scarborough Reef	SCR
+291	Serranilla Bank	SER
+292	South Georgia and the Islands	SGS
+293	Saint Helena	SHN
+294	San Marino	SMR
+295	Somaliland	SOL
+296	Saint Pierre and Miquelon	SPM
+297	São Tomé and Principe	STP
+298	Sint Maarten	SXM
+299	Seychelles	SYC
+300	Turks and Caicos Islands	TCA
+301	Tonga	TON
+302	Tuvalu	TUV
+303	United States Minor Outlying Islands	UMI
+304	US Naval Base Guantanamo Bay	USG
+305	Vatican	VAT
+306	Saint Vincent and the Grenadines	VCT
+307	British Virgin Islands	VGB
+308	United States Virgin Islands	VIR
+309	Wallis and Futuna Islands	WLF
+310	Akrotiri	WSB
+311	Samoa	WSM
 \.
