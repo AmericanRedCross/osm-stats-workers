@@ -3,7 +3,7 @@ CREATE MATERIALIZED VIEW raw_hashtags_users AS
     rank() OVER (ORDER BY edits DESC) edits_rank,
     rank() OVER (ORDER BY buildings DESC) buildings_rank,
     rank() OVER (ORDER BY road_km DESC) road_km_rank,
-    rank() OVER (ORDER BY updated_at DESC) updated_rank
+    rank() OVER (ORDER BY updated_at DESC) updated_at_rank
   FROM (
     SELECT
       raw_changesets_hashtags.hashtag_id,
