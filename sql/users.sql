@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE VIEW users AS
   SELECT
     id,
-    name,
+    u.name,
     null::geometry geo_extent,
     buildings_added total_building_count_add,
     buildings_modified total_building_count_mod,

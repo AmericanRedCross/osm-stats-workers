@@ -1,6 +1,8 @@
 CREATE MATERIALIZED VIEW user_stats AS
   SELECT
     user_id,
+    name,
+    count(raw_changesets.id) changesets,
     sum(road_km_added) road_km_added,
     sum(road_km_modified) road_km_modified,
     sum(waterway_km_added) waterway_km_added,
@@ -19,7 +21,8 @@ CREATE MATERIALIZED VIEW user_stats AS
       END) josm_edits,
     max(coalesce(closed_at, created_at)) updated_at
   FROM raw_changesets
+  JOIN raw_users ON raw_changesets.user_id = raw_users.id
   WHERE user_id IS NOT NULL
-  GROUP BY user_id;
+  GROUP BY user_id, name;
 
 CREATE UNIQUE INDEX user_stats_user_id ON user_stats(user_id);
