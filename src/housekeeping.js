@@ -26,6 +26,10 @@ module.exports = callback => {
         async.apply(
           client.query.bind(client),
           "REFRESH MATERIALIZED VIEW CONCURRENTLY hashtag_stats"
+        ),
+        async.apply(
+          client.query.bind(client),
+          "REFRESH MATERIALIZED VIEW CONCURRENTLY raw_hashtags_users"
         )
       ],
       err => {
