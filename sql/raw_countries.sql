@@ -237,7 +237,7 @@ COPY raw_countries (id, name, code) FROM stdin;
 230	South Africa	ZAF
 231	Zambia	ZMB
 232	Zimbabwe	ZWE
-233	Aruba ABW
+233	Aruba	ABW
 234	Anguilla	AIA
 235	Åland Islands	ALD
 236	Andorra	AND
