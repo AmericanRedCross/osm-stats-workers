@@ -19,3 +19,4 @@ CREATE MATERIALIZED VIEW raw_hashtags_users AS
   ) AS _;
 
 CREATE INDEX raw_hashtags_users_hashtag_id ON raw_hashtags_users(hashtag_id);
+CREATE INDEX raw_hashtags_users_user_id ON raw_hashtags_users(user_id);

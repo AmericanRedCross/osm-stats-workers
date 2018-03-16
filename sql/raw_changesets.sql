@@ -21,3 +21,5 @@ CREATE TABLE raw_changesets (
     updated_at timestamp with time zone,
     PRIMARY KEY(id)
 );
+
+CREATE INDEX raw_changesets_user_id ON raw_changesets(user_id);
