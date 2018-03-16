@@ -18,5 +18,6 @@ CREATE MATERIALIZED VIEW raw_hashtags_users AS
     GROUP BY hashtag_id, user_id
   ) AS _;
 
+CREATE UNIQUE INDEX raw_hashtags_users_hashtag_id_user_id ON raw_hashtags_users(hashtag_id, user_id);
 CREATE INDEX raw_hashtags_users_hashtag_id ON raw_hashtags_users(hashtag_id);
 CREATE INDEX raw_hashtags_users_user_id ON raw_hashtags_users(user_id);
