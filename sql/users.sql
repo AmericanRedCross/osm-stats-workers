@@ -5,6 +5,7 @@ CREATE VIEW users AS
   SELECT
     id,
     u.name,
+    changesets,
     null::geometry geo_extent,
     buildings_added total_building_count_add,
     buildings_modified total_building_count_mod,
