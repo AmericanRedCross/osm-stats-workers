@@ -19,6 +19,8 @@ CREATE MATERIALIZED VIEW user_stats AS
       WHEN position('josm' in lower(editor)) > 0 THEN 1
       ELSE 0
       END) josm_edits,
+    (SELECT count(country_id) FROM raw_countries_users where raw_countries_users.user_id = raw_changesets.user_id) AS countries,
+    (SELECT count(hashtag_id) FROM raw_hashtags_users where raw_hashtags_users.user_id = raw_changesets.user_id) AS hashtags,
     max(coalesce(closed_at, created_at)) updated_at
   FROM raw_changesets
   JOIN raw_users ON raw_changesets.user_id = raw_users.id

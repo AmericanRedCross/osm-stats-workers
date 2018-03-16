@@ -72,7 +72,9 @@ class BadgeProcessor extends AbstractBadgeProcessor {
       roadKms: row.road_km_added,
       roadKmMods: row.road_km_modified,
       waterways: row.waterway_km_added,
-      josm: Number(row.josm_edits)
+      josm: Number(row.josm_edits),
+      countries: Number(row.countries),
+      hashtags: Number(row.hashtags)
     });
 
     return this.updateBadges(row.user_id, badges, callback);
