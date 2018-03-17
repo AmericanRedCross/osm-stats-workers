@@ -2,9 +2,8 @@
 
 const housekeeping = require("../src/housekeeping");
 
-
 process.on("unhandledRejection", err => {
   throw err;
 });
 
-housekeeping();
+housekeeping().then(() => process.exit());
