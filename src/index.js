@@ -15,7 +15,7 @@ module.exports.isNew = ({ properties: { version } }) => Number(version) === 1;
 module.exports.isNode = ({ properties: { type } }) => type === "node";
 
 module.exports.isPOI = ({ properties: { tags } }) =>
-  POI_TAGS.includes(Object.keys(tags));
+  POI_TAGS.some(x => Object.keys(tags).includes(x));
 
 module.exports.isRelation = ({ properties: { type } }) => type === "relation";
 
