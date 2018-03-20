@@ -1,6 +1,8 @@
 CREATE MATERIALIZED VIEW hashtag_stats AS
   SELECT
     hashtag,
+    count(c.id) changesets,
+    count(distinct c.user_id) users,
     sum(road_km_added) road_km_added,
     sum(road_km_modified) road_km_modified,
     sum(waterway_km_added) waterway_km_added,
@@ -12,6 +14,7 @@ CREATE MATERIALIZED VIEW hashtag_stats AS
     sum(buildings_added) buildings_added,
     sum(buildings_modified) buildings_modified,
     sum(pois_added) pois_added,
+    sum(pois_modified) pois_modified,
     sum(CASE
       WHEN position('josm' in lower(editor)) > 0 THEN 1
       ELSE 0
