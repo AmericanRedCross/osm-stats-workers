@@ -11,6 +11,7 @@ CREATE MATERIALIZED VIEW raw_hashtags_users AS
       count(id) changesets,
       sum(buildings_added + buildings_modified + roads_added + roads_modified + waterways_added + waterways_modified + pois_added + pois_modified) edits,
       sum(buildings_added + buildings_modified) buildings,
+      sum(roads_added + roads_modified) roads,
       sum(road_km_added + road_km_modified) road_km,
       max(coalesce(closed_at, created_at)) updated_at
     FROM raw_changesets
