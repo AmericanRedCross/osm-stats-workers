@@ -10,15 +10,6 @@ const getBadges = require("./sum_check");
 const getDateBasedBadges = require("./date_check_total");
 const getSequentialBadges = require("./date_check_sequential");
 
-const pool = new Pool({
-  connectionString: env.require("DATABASE_URL")
-});
-
-pool.on("error", err => {
-  console.error("Unexpected error on idle client", err);
-  throw err;
-});
-
 class AbstractBadgeProcessor extends Writable {
   constructor(pool) {
     super({
@@ -101,6 +92,9 @@ class DateBasedBadgeProcessor extends AbstractBadgeProcessor {
 
 module.exports.updateBadges = callback => {
   callback = callback || NOOP;
+  const pool = new Pool({
+    connectionString: env.require("DATABASE_URL")
+  });
 
   return async.parallel(
     [
@@ -148,6 +142,10 @@ module.exports.updateBadges = callback => {
             .pipe(new DateBasedBadgeProcessor(pool).on("finish", done));
         })
     ],
-    callback
+    err =>
+      pool
+        .end()
+        .then(() => callback(err))
+        .catch(callback)
   );
 };
