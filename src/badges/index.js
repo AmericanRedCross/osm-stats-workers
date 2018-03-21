@@ -33,7 +33,7 @@ class AbstractBadgeProcessor extends Writable {
     return Promise.all(
       Object.keys(badges)
         .map(x => badges[x])
-        .map(x =>
+        .map(badge =>
           query(
             this.pool,
             `
