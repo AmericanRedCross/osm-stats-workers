@@ -45,7 +45,7 @@ ON CONFLICT DO NOTHING
             [userId, badge.category, badge.level]
           )
         )
-    );
+    ).then(() => callback()).catch(callback);
   }
 }
 
