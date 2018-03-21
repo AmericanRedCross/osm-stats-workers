@@ -10,6 +10,16 @@ const getBadges = require("./sum_check");
 const getDateBasedBadges = require("./date_check_total");
 const getSequentialBadges = require("./date_check_sequential");
 
+const query = async (pool, query, params) => {
+  const client = await pool.connect();
+
+  try {
+    return await client.query(query, params);
+  } finally {
+    client.release();
+  }
+};
+
 class AbstractBadgeProcessor extends Writable {
   constructor(pool) {
     super({
@@ -20,36 +30,21 @@ class AbstractBadgeProcessor extends Writable {
   }
 
   updateBadges(userId, badges, callback) {
-    return async.each(
-      Object.keys(badges).map(x => badges[x]),
-      (badge, next) => {
-        this.pool.connect((err, client, release) => {
-          if (err) {
-            console.warn(err);
-            release();
-            return callback(err);
-          }
-
-          client.query(
+    return Promise.all(
+      Object.keys(badges)
+        .map(x => badges[x])
+        .map(x =>
+          query(
+            this.pool,
             `
 INSERT INTO badges_users (user_id, badge_id) VALUES (
   $1, (SELECT id FROM badges WHERE category=$2 AND level=$3)
 )
 ON CONFLICT DO NOTHING
             `,
-            [userId, badge.category, badge.level],
-            next
-          );
-
-          release();
-        });
-      },
-      err => {
-        if (err) {
-          console.warn(err);
-        }
-        return callback();
-      }
+            [userId, badge.category, badge.level]
+          )
+        )
     );
   }
 }
@@ -92,60 +87,84 @@ class DateBasedBadgeProcessor extends AbstractBadgeProcessor {
 
 module.exports.updateBadges = callback => {
   callback = callback || NOOP;
+
   const pool = new Pool({
     connectionString: env.require("DATABASE_URL")
   });
 
-  return async.parallel(
+  const now = new Date();
+
+  return async.series(
     [
-      next =>
-        pool.connect((err, client, release) => {
-          if (err) {
-            throw err;
-          }
+      async.apply(async.parallel, [
+        next =>
+          pool.connect((err, client, release) => {
+            if (err) {
+              throw err;
+            }
 
-          const done = () => {
-            release();
+            const done = () => {
+              release();
 
-            return next();
-          };
+              return next();
+            };
 
-          // TODO fetch users updated since the last time badges were updated
-          const query = new QueryStream("SELECT * FROM user_stats");
-
-          client.query(query).pipe(new BadgeProcessor(pool).on("finish", done));
-        }),
-      next =>
-        pool.connect((err, client, release) => {
-          if (err) {
-            throw err;
-          }
-
-          const done = () => {
-            release();
-
-            return next();
-          };
-
-          // TODO fetch data for users w/ changesets updated since the last time badges were updated
-          const query = new QueryStream(`
+            const query = new QueryStream(
+              `
+SELECT *
+FROM user_stats
+WHERE updated_at > (
   SELECT
-    user_id,
-    array_agg(DISTINCT date_trunc('day', created_at)) timestamps
-  FROM raw_changesets
-  WHERE created_at IS NOT NULL
-  GROUP BY user_id
+    last_run
+  FROM badge_updater_status
+)
+              `
+            );
+
+            client
+              .query(query)
+              .pipe(new BadgeProcessor(pool).on("finish", done));
+          }),
+        next =>
+          pool.connect((err, client, release) => {
+            if (err) {
+              throw err;
+            }
+
+            const done = () => {
+              release();
+
+              return next();
+            };
+
+            // fetch data for users w/ changesets updated since the last time badges were updated
+            const query = new QueryStream(`
+  SELECT
+    c.user_id,
+    array_agg(DISTINCT date_trunc('day', c.created_at)) timestamps
+  FROM raw_changesets c
+  JOIN user_stats u USING (user_id)
+  WHERE c.created_at IS NOT NULL
+    AND u.updated_at > (SELECT last_run FROM badge_updater_status)
+  GROUP BY c.user_id
     `);
 
-          client
-            .query(query)
-            .pipe(new DateBasedBadgeProcessor(pool).on("finish", done));
-        })
+            client
+              .query(query)
+              .pipe(new DateBasedBadgeProcessor(pool).on("finish", done));
+          })
+      ]),
+      done =>
+        query(pool, "UPDATE badge_updater_status SET last_run = $1", [now])
+          .then(() => done())
+          .catch(done)
     ],
-    err =>
-      pool
-        .end()
-        .then(() => callback(err))
-        .catch(callback)
+    async err => {
+      try {
+        await pool.end();
+      } finally {
+        return callback(err);
+      }
+    }
   );
 };

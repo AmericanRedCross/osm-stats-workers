@@ -6,4 +6,10 @@ process.on("unhandledRejection", err => {
   throw err;
 });
 
-updateBadges();
+updateBadges(err => {
+  if (err) {
+    throw err;
+  }
+
+  process.exit();
+});

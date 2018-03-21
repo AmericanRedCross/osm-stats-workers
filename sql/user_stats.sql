@@ -28,3 +28,4 @@ CREATE MATERIALIZED VIEW user_stats AS
   GROUP BY user_id, name;
 
 CREATE UNIQUE INDEX user_stats_user_id ON user_stats(user_id);
+CREATE INDEX user_stats_updated_at ON user_stats(updated_at);
