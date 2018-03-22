@@ -13,9 +13,6 @@ COPY badges (id, category, name, level) FROM stdin;
 10	4	The Wright Stuff	1
 11	4	The Wright Stuff	2
 12	4	The Wright Stuff	3
-13	5	Field Mapper	1
-14	5	Field Mapper	2
-15	5	Field Mapper	3
 16	6	On The Road Again	1
 17	6	On The Road Again	2
 18	6	On The Road Again	3

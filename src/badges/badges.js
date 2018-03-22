@@ -9,11 +9,6 @@ module.exports = {
     id: 4,
     tiers: { 1: 100, 2: 500, 3: 1000 }
   },
-  gpsTraces: {
-    name: "Field Mapper",
-    id: 5,
-    tiers: { 1: 10, 2: 50, 3: 100 }
-  },
   roadKms: {
     name: "On The Road Again",
     id: 6,
