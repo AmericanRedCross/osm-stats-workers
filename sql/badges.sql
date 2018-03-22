@@ -19,9 +19,9 @@ COPY badges (id, category, name, level) FROM stdin;
 19	7	Long and Winding Road	1
 20	7	Long and Winding Road	2
 21	7	Long and Winding Road	3
-22	8	White Water Rafting	1
-23	8	White Water Rafting	2
-24	8	White Water Rafting	3
+22	8	Whitewater Rafting	1
+23	8	Whitewater Rafting	2
+24	8	Whitewater Rafting	3
 28	10	Task Champion	1
 29	10	Task Champion	2
 30	10	Task Champion	3

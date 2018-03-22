@@ -20,7 +20,7 @@ module.exports = {
     tiers: { 1: 50, 2: 100, 3: 500 }
   },
   waterways: {
-    name: "White Water Rafting",
+    name: "Whitewater Rafting",
     id: 8,
     tiers: { 1: 50, 2: 100, 3: 500 }
   },
