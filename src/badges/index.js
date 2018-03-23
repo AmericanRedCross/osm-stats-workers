@@ -45,7 +45,9 @@ ON CONFLICT DO NOTHING
             [userId, badge.category, badge.level]
           )
         )
-    ).then(() => callback()).catch(callback);
+    )
+      .then(() => callback())
+      .catch(callback);
   }
 }
 
@@ -90,6 +92,10 @@ module.exports.updateBadges = callback => {
 
   const pool = new Pool({
     connectionString: env.require("DATABASE_URL")
+  });
+
+  pool.on("error", function(error, client) {
+    console.warn("Pool error:", err);
   });
 
   const now = new Date();

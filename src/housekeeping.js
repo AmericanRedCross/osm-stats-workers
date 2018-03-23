@@ -23,6 +23,10 @@ module.exports = async () => {
     connectionString: env.require("DATABASE_URL")
   });
 
+  pool.on("error", function(error, client) {
+    console.warn("Pool error:", err);
+  });
+
   try {
     await Promise.all(QUERIES.map(q => query(pool, q)));
   } finally {
