@@ -23,7 +23,7 @@ module.exports = async () => {
     connectionString: env.require("DATABASE_URL")
   });
 
-  pool.on("error", function(error, client) {
+  pool.on("error", function(err, client) {
     console.warn("Pool error:", err);
   });
 
