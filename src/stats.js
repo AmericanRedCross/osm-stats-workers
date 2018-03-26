@@ -20,6 +20,11 @@ const pool = new Pool({
   connectionString: env.require("DATABASE_URL")
 });
 
+pool.on("error", function(err, client) {
+  console.warn("Unexpected error on idle client", err);
+  throw err;
+});
+
 const query = (q, params, callback) =>
   pool.connect((err, client, release) => {
     if (typeof params === "function") {
