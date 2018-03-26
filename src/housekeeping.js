@@ -25,7 +25,7 @@ module.exports = async () => {
 
   pool.on("error", function(err, client) {
     console.warn("Unexpected error on idle client", err);
-    process.exit(-1);
+    throw err;
   });
 
   try {

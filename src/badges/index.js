@@ -96,7 +96,7 @@ module.exports.updateBadges = callback => {
 
   pool.on("error", function(err, client) {
     console.warn("Unexpected error on idle client", err);
-    process.exit(-1);
+    throw err;
   });
 
   const now = new Date();
