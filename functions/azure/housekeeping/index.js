@@ -1,3 +1,4 @@
-const housekeeping = require("../../../src/housekeeping")
+const housekeeping = require("../../../src/housekeeping");
 
-exports.handler = context => housekeeping(context.done);
+exports.handler = context =>
+  housekeeping.then(() => context.done()).catch(err => context.done(err));
