@@ -107,7 +107,7 @@ module.exports.updateBadges = callback => {
         next =>
           pool.connect((err, client, release) => {
             if (err) {
-              throw err;
+              return next(err);
             }
 
             const done = () => {
@@ -135,7 +135,7 @@ WHERE updated_at > (
         next =>
           pool.connect((err, client, release) => {
             if (err) {
-              throw err;
+              return next(err);
             }
 
             const done = () => {
