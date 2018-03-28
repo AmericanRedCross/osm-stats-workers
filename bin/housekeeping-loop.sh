@@ -2,5 +2,5 @@
 
 while true; do
   npm run housekeeping
-  npm run update-badge
+  npm run update-badges
 done
