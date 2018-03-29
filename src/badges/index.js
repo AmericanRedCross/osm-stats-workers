@@ -94,7 +94,7 @@ module.exports.updateBadges = callback => {
     connectionString: env.require("DATABASE_URL")
   });
 
-  pool.on("error", function(err, client) {
+  pool.on("error", err => {
     console.warn("Unexpected error on idle client", err);
     throw err;
   });
@@ -170,7 +170,7 @@ WHERE updated_at > (
       try {
         await pool.end();
       } finally {
-        return callback(err);
+        callback(err);
       }
     }
   );

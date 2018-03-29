@@ -23,7 +23,7 @@ module.exports = async () => {
     connectionString: env.require("DATABASE_URL")
   });
 
-  pool.on("error", function(err, client) {
+  pool.on("error", err => {
     console.warn("Unexpected error on idle client", err);
     throw err;
   });
