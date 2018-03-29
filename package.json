@@ -5,9 +5,6 @@
   "scripts": {
     "test": "npm run lint && NODE_ENV=test tap test/*.test.js test/*/*.test.js --cov",
     "lint": "eslint index.js src/*",
-    "azure-pack": "npm run clean && NODE_ENV=production webpack --progress --display-optimization-bailout --config webpack.config.js",
-    "clean": "rm -f dist/azure/*/index.js*",
-    "azure-publish": "npm run azure-pack && gh-pages -d dist/azure -b azure-next",
     "housekeeping": "node bin/housekeeping.js",
     "osm-changes": "node bin/osm-changes.js",
     "update-badges": "node bin/update-badges.js",
@@ -33,7 +30,6 @@
     "osm2obj": "^3.0.0",
     "pg": "^7.4.1",
     "pg-query-stream": "^1.1.1",
-    "pg.js": "^4.1.1",
     "require-env": "^0.2.1"
   },
   "devDependencies": {
@@ -47,7 +43,6 @@
     "nodemon": "^1.14.12",
     "pgexplode": "^1.0.1",
     "prettier": "^1.10.2",
-    "tap": "^11.1.0",
-    "webpack": "^3.11.0"
+    "tap": "^11.1.0"
   }
 }

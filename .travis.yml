@@ -1,16 +1,10 @@
 language: node_js
 
 node_js:
-  - '6.10'
+  - '8'
 
 env:
   global:
   - GH_REF=github.com/AmericanRedCross/osm-stats-workers.git
   - DEPLOY_BRANCH=master
   - secure: "KZPoj8Mor3amdmSvhn2APS1pjISWrMnqeXzo1HN4ilQF52gG1hFsRX+zW/7SpeSjepex2o2nZjfyTDWJbgFIwxovMiB1FqQS41kDrkBjOV6f6hTZbc9Q7AKjLMCNmTwES2ZmlbsO+sJ0Ezde077pV1UBfeXAduLfP18oAtYVFqj9o2q2sxUyXeygIHrIgsaiMBYrrGSJGbC1Q7jcR07nn/YdRYVibKXL7LLChr7hTgKDxhE8gnqtTgFdsyM+33JPCOuBl6QxqTKbE+BqaU/0LnYKMI63AKo7cmPA5FDWWGJdPTV4voohC4zI/6hC1rnuaHOdbPNcBFdgUH8QbLx+y6f8IivJujLTDeJ5VGeFXqOD7NL40h6SQgPHNeRze6YWbfsD1PRKfJ4d512+tb9iq7VqBT6jhntlktEcXHDblQVDHrBf3U6O+6aGrWTThoha/FIF6IwWVLQStg1YyZfkUqNQLkJlYeXfwi4oH48VSNT/YAjp0qceOvbwrJ95ZCgD+0aPpYYQWyddqjCAp6Ddu2s/6uthDl9OxTYRp9znY6I+RSskCWEdDUT+NReOgvPkRRC3FZX92WvUcr5g5kR2xuLu9kuOShAAMof6pf42BgdA/Ivda4PEOwkT5si14CUk6KNRqR7Z5n/IQsIlB8YcajaEIJCgTTM9yXMcbwF30zY="
-
-script:
-  - "./.build_scripts/zip.sh"
-
-after_success:
-  - "./.build_scripts/deploy.sh"
