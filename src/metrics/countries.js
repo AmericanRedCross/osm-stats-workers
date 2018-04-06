@@ -24,6 +24,7 @@ module.exports = feature => {
     feature = buffer(feature, 0.000001, { units: "degrees" });
   }
 
+  // workaround for https://github.com/w8r/martinez/issues/74
   if (feature.properties.id === "576508727") {
     return ["IDN"];
   }
