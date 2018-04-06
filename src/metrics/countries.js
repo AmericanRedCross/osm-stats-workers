@@ -24,6 +24,10 @@ module.exports = feature => {
     feature = buffer(feature, 0.000001, { units: "degrees" });
   }
 
+  if (feature.properties.id === "576508727") {
+    return ["IDN"];
+  }
+
   return COUNTRY_INDEX.search(feature)
     .features.filter(x => {
       try {
