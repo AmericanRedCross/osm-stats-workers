@@ -25,6 +25,10 @@ module.exports = feature => {
   }
 
   // workaround for https://github.com/w8r/martinez/issues/74
+  if (["192998865"].includes(feature.properties.id)) {
+    return ["CZE"];
+  }
+
   if (feature.properties.id === "576508727") {
     return ["IDN"];
   }
