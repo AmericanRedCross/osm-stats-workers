@@ -2,6 +2,6 @@
 
 while true; do
   date
-  npm run housekeeping
-  npm run update-badges
+  timeout 30m npm run housekeeping
+  timeout 30m npm run update-badges
 done
