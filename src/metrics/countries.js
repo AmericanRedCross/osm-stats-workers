@@ -44,9 +44,10 @@ module.exports = feature => {
   return COUNTRY_INDEX.search(feature)
     .features.filter(x => {
       try {
+
         const i = martinez.intersection(
-          x.geometry.coordinates,
-          feature.geometry.coordinates
+          [x.geometry.coordinates[0].map(([x, y]) => [x * 0.1, y * 0.1])],
+          [feature.geometry.coordinates[0].map(([x, y]) => [x * 0.1, y * 0.1])]
         );
 
         return i != null && i.length > 0;
