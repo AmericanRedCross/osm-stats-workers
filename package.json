@@ -8,8 +8,8 @@
     "housekeeping": "node bin/housekeeping.js",
     "osm-changes": "node bin/osm-changes.js",
     "update-badges": "node bin/update-badges.js",
-    "start": "npm run osm-changes",
-    "gracefully": "npm run osm-changes; if [ $? -eq 134 ]; then psql $DATABASE_URL -c 'UPDATE augmented_diff_status set id=id + 1'; fi"
+    "start-local": "npm run osm-changes",
+    "start": "npm run osm-changes; if [ $? -eq 134 ]; then psql $DATABASE_URL -c 'UPDATE augmented_diff_status set id=id + 1'; fi"
   },
   "author": "",
   "license": "BSD-3-Clause",
