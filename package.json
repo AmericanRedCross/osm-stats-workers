@@ -23,7 +23,7 @@
     "@turf/meta": "^6.0.1",
     "async": "^2.6.0",
     "babel-polyfill": "^6.26.0",
-    "core-js": "^2.6.5",
+    "core-js": "^3.0.0-beta.16",
     "epipebomb": "^1.0.0",
     "geojson-rbush": "^3.1.0",
     "highland": "^2.11.1",
