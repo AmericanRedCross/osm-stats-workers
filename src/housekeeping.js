@@ -29,7 +29,16 @@ module.exports = async () => {
   });
 
   try {
-    await Promise.all(QUERIES.map(q => query(pool, q)));
+    await Promise.all(
+      QUERIES.map(async q => {
+        const check = `select count(pid) from pg_stat_activity where query ilike '${q}%' and state = 'active'`;
+        const { count } = (await query(pool, check)).rows[0];
+
+        if (Number(count) === 0) {
+          return query(pool, q);
+        }
+      })
+    );
   } finally {
     await pool.end();
   }
