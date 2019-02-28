@@ -1,5 +1,6 @@
 // for osm-replication-streams on Node < 8
 require("babel-polyfill");
+require("core-js/features/array/flat");
 
 const _ = require("highland");
 const async = require("async");
