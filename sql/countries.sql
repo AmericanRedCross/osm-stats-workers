@@ -1,4 +1,4 @@
-CREATE VIEW countries AS
+CREATE TABLE countries AS
   SELECT
     id,
     name,

@@ -1,4 +1,4 @@
-CREATE VIEW changesets_hashtags AS
+CREATE TABLE changesets_hashtags AS
   SELECT
     changeset_id,
     hashtag_id

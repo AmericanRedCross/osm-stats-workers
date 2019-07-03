@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW raw_hashtags_users AS
+CREATE TABLE raw_hashtags_users AS
   SELECT *,
     rank() OVER (ORDER BY edits DESC) edits_rank,
     rank() OVER (ORDER BY buildings DESC) buildings_rank,

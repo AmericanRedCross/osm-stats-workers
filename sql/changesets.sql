@@ -1,5 +1,4 @@
--- view with a schema that matches the legacy changesets table
-CREATE VIEW changesets AS
+CREATE TABLE changesets AS
   SELECT
     id,
     roads_added road_count_add,

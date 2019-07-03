@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW user_stats AS
+CREATE TABLE user_stats AS
   SELECT
     user_id,
     name,

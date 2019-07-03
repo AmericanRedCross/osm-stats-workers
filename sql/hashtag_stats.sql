@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW hashtag_stats AS
+CREATE TABLE hashtag_stats AS
   SELECT
     hashtag,
     count(c.id) changesets,
