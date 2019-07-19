@@ -27,6 +27,7 @@
     "epipebomb": "^1.0.0",
     "geojson-rbush": "^3.1.0",
     "highland": "^2.11.1",
+    "html-entities": "^1.2.1",
     "martinez-polygon-clipping": "^0.5.0",
     "osm-replication-streams": "^0.6.3",
     "osm2obj": "^3.0.0",

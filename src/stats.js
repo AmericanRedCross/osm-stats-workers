@@ -5,6 +5,7 @@ require("core-js/features/array/flat");
 const _ = require("highland");
 const async = require("async");
 const env = require("require-env");
+var htmlEntities = require("html-entities").AllHtmlEntities;
 const OSMParser = require("osm2obj");
 const {
   parsers: { AugmentedDiffParser },
@@ -209,10 +210,16 @@ SET id=$1,
 // from https://github.com/openstreetmap/iD/blob/45ffa3b731463bf4eba52519896ad33653def0cd/modules/ui/commit.js
 const HASHTAG_REGEX = /(#[^\u2000-\u206F\u2E00-\u2E7F\s\\'!"#$%()*,./:;<=>?@[\]^`{|}~]+)/g;
 
-const extractHashtags = tags =>
-  ((tags.comment || "").match(HASHTAG_REGEX) || []).map(x =>
-    x.slice(1).toLowerCase()
+const extractHashtags = tags => {
+  tags.comment = htmlEntities.decode(tags.comment);
+  ((tags.comment || "").match(HASHTAG_REGEX) || []).map(
+    function(x) {
+      x.slice(1).toLowerCase();
+    }
+ 
   );
+}
+  
 
 const changesetUpdater = changeset => {
   const {
