@@ -1,70 +1,70 @@
 // for osm-replication-streams on Node < 8
-require('babel-polyfill')
-require('core-js/features/array/flat')
+require("babel-polyfill");
+require("core-js/features/array/flat");
 
-const _ = require('highland')
-const async = require('async')
-const env = require('require-env')
-const htmlEntities = require('html-entities').AllHtmlEntities
-const OSMParser = require('osm2obj')
+const _ = require("highland");
+const async = require("async");
+const env = require("require-env");
+const htmlEntities = require('html-entities').AllHtmlEntities;
+const OSMParser = require("osm2obj");
 const {
   parsers: { AugmentedDiffParser },
   sources: { AugmentedDiffs, Changesets }
-} = require('osm-replication-streams')
-const { Pool } = require('pg')
+} = require("osm-replication-streams");
+const { Pool } = require("pg");
 
-const { NOOP } = require('.')
-const StatsStream = require('./stats_stream')
+const { NOOP } = require(".");
+const StatsStream = require("./stats_stream");
 
-const OVERPASS_URL = process.env.OVERPASS_URL || 'http://overpass-api.de';
+const OVERPASS_URL = process.env.OVERPASS_URL || "http://overpass-api.de";
 
 const pool = new Pool({
-  connectionString: env.require('DATABASE_URL')
-})
+  connectionString: env.require("DATABASE_URL")
+});
 
-pool.on('error', err => {
-  console.warn('Unexpected error on idle client', err)
-  throw err
-})
+pool.on("error", err => {
+  console.warn("Unexpected error on idle client", err);
+  throw err;
+});
 
 const query = (q, params, callback) =>
   pool.connect((err, client, release) => {
-    if (typeof params === 'function') {
-      callback = params
-      params = null
+    if (typeof params === "function") {
+      callback = params;
+      params = null;
     }
 
-    callback = callback || NOOP
+    callback = callback || NOOP;
 
     if (err) {
-      console.warn(err)
-      release()
-      return callback(err)
+      console.warn(err);
+      release();
+      return callback(err);
     }
 
     return client.query(q, params, (err, results) => {
-      release()
-      return callback(err, results)
-    })
-  })
+      release();
+      return callback(err, results);
+    });
+  });
 
 const join = (a, b) => {
-  if (typeof a === 'number' || typeof b === 'number') {
-    return (a || 0) + (b || 0)
+  if (typeof a === "number" || typeof b === "number") {
+    return (a || 0) + (b || 0);
   }
 
   if (Array.isArray(a) || Array.isArray(b)) {
-    return Array.from(new Set(a || [].concat(b)))
+    return Array.from(new Set(a || [].concat(b)));
   }
 
-  throw new Error(`Don't know how to join: '${a}', '${b}'`)
+  throw new Error(`Don't know how to join: '${a}', '${b}'`);
 };
 
 const merge = (a, b) =>
   Object.keys(b).reduce(
     (acc, k) => Object.assign({}, acc, { [k]: join(acc[k], b[k]) }),
     a
-  )
+  );
 
 const summarizer = batch =>
   batch.reduce(
@@ -76,7 +76,7 @@ const summarizer = batch =>
         })
       }),
     {}
-  )
+  );
 
 const statUpdater = stats => {
   const lastAugmentedDiff = Math.max.apply(
@@ -89,9 +89,9 @@ const statUpdater = stats => {
         )
       )
     )
-  )
+  );
 
-  console.warn(`Checkpointing augmented diffs @ ${lastAugmentedDiff}.`)
+  console.warn(`Checkpointing augmented diffs @ ${lastAugmentedDiff}.`);
 
   const queries = Object.keys(stats)
     .map(changeset =>
@@ -196,7 +196,7 @@ SET id=$1,
           ]
         ])
     )
-    .reduce((acc, a) => acc.concat(a), [])
+    .reduce((acc, a) => acc.concat(a), []);
 
   return _(push =>
     async.each(
@@ -204,17 +204,17 @@ SET id=$1,
       ([q, params], done) => query(q, params, done),
       err => push(err, _.nil)
     )
-  )
+  );
 };
 
 // from https://github.com/openstreetmap/iD/blob/45ffa3b731463bf4eba52519896ad33653def0cd/modules/ui/commit.js
-const HASHTAG_REGEX = /(#[^\u2000-\u206F\u2E00-\u2E7F\s\\'!"#$%()*,./:;<=>?@[\]^`{|}~]+)/g
+const HASHTAG_REGEX = /(#[^\u2000-\u206F\u2E00-\u2E7F\s\\'!"#$%()*,./:;<=>?@[\]^`{|}~]+)/g;
 
 const extractHashtags = tags => {
-  tags.comment = htmlEntities.decode(tags.comment)
+  tags.comment = htmlEntities.decode(tags.comment);
   return ((tags.comment || "").match(HASHTAG_REGEX) || []).map(x =>
     x.slice(1).toLowerCase());
-}
+};
 
 const changesetUpdater = changeset => {
   const {
@@ -223,13 +223,13 @@ const changesetUpdater = changeset => {
     closed_at: closedAt,
     uid,
     user
-  } = changeset
-  let editor = null
-  let hashtags = []
+  } = changeset;
+  let editor = null;
+  let hashtags = [];
 
   if (changeset.tags != null) {
-    editor = changeset.tags.created_by
-    hashtags = extractHashtags(changeset.tags)
+    editor = changeset.tags.created_by;
+    hashtags = extractHashtags(changeset.tags);
   }
 
   const queries = [
@@ -283,7 +283,7 @@ WHERE u.id = $1
       `,
       [uid, user]
     ]
-  ]
+  ];
 
   return _(push => {
     async.series(
@@ -317,7 +317,7 @@ JOIN raw_hashtags USING(hashtag)
                 [hashtag]
               ),
               (result, fin) => {
-                const { id: hashtagId } = result.rows[0]
+                const { id: hashtagId } = result.rows[0];
 
                 return query(
                   `
@@ -329,7 +329,7 @@ ON CONFLICT DO NOTHING
                   `,
                   [id, hashtagId],
                   fin
-                )
+                );
               }
             ],
             done
@@ -337,21 +337,21 @@ ON CONFLICT DO NOTHING
         )
       ],
       err => push(err, _.nil)
-    )
-  })
+    );
+  });
 };
 
 const getInitialAugmentedDiffSequenceNumber = callback =>
-  query('SELECT id FROM augmented_diff_status', (err, results) => {
+  query("SELECT id FROM augmented_diff_status", (err, results) => {
     if (err) {
-      return callback(err)
+      return callback(err);
     }
 
-    return callback(null, results.rows[0].id)
-  })
+    return callback(null, results.rows[0].id);
+  });
 
 const checkpointChangesets = sequenceNumber => {
-  console.warn(`Checkpointing changesets @ ${sequenceNumber}.`)
+  console.warn(`Checkpointing changesets @ ${sequenceNumber}.`);
 
   query(
     `
@@ -362,20 +362,20 @@ SET id=$1,
     [Number(sequenceNumber)],
     err => {
       if (err) {
-        console.warn(err.stack)
+        console.warn(err.stack);
       }
     }
-  )
+  );
 };
 
 const getInitialChangesetSequenceNumber = callback =>
-  query('SELECT id FROM changesets_status', (err, results) => {
+  query("SELECT id FROM changesets_status", (err, results) => {
     if (err) {
-      return callback(err)
+      return callback(err);
     }
 
-    return callback(null, results.rows[0].id)
-  })
+    return callback(null, results.rows[0].id);
+  });
 
 module.exports = (options, callback) => {
   const opts = Object.assign(
@@ -385,9 +385,9 @@ module.exports = (options, callback) => {
       infinite: true
     },
     options
-  )
+  );
 
-  callback = callback || NOOP
+  callback = callback || NOOP;
 
   return async.parallel(
     {
@@ -399,7 +399,7 @@ module.exports = (options, callback) => {
       { initialAugmentedDiffSequenceNumber, initialChangesetSequenceNumber }
     ) => {
       if (err) {
-        return callback(err)
+        return callback(err);
       }
 
       return async.parallel(
@@ -412,57 +412,57 @@ module.exports = (options, callback) => {
                 infinite: opts.infinite,
                 delay: opts.delay
               })
-                .pipe(new AugmentedDiffParser().on('error', console.warn))
+                .pipe(new AugmentedDiffParser().on("error", console.warn))
                 .pipe(new StatsStream())
             )
               // batch by sequence
               .through(s => {
-                let batched = []
-                let sequence = null
+                let batched = [];
+                let sequence = null;
 
                 return s.consume((err, x, push, next) => {
                   if (err) {
-                    push(err)
-                    return next()
+                    push(err);
+                    return next();
                   }
 
                   if (x === _.nil) {
                     // end of the stream; flush
                     if (batched.length > 0) {
-                      push(null, batched)
+                      push(null, batched);
                     }
 
-                    return push(null, _.nil)
+                    return push(null, _.nil);
                   }
 
-                  let activeSequence = sequence
+                  let activeSequence = sequence;
 
                   if (x.stats != null) {
-                    [activeSequence] = x.stats.augmentedDiffs
+                    [activeSequence] = x.stats.augmentedDiffs;
                   }
 
-                  if (x.type === 'Marker' || sequence !== activeSequence) {
+                  if (x.type === "Marker" || sequence !== activeSequence) {
                     // new sequence; flush previous
                     if (batched.length > 0) {
-                      push(null, batched)
+                      push(null, batched);
                     }
 
                     // reset batch
-                    if (x.type !== 'Marker') {
-                      batched = [x]
+                    if (x.type !== "Marker") {
+                      batched = [x];
                     } else {
-                      batched = []
+                      batched = [];
                     }
-                    sequence = activeSequence
+                    sequence = activeSequence;
 
-                    return next()
+                    return next();
                   }
 
                   // add this item to the batch
-                  batched.push(x)
+                  batched.push(x);
 
-                  return next()
-                })
+                  return next();
+                });
               })
               .map(summarizer)
               .flatMap(statUpdater)
@@ -484,7 +484,7 @@ module.exports = (options, callback) => {
               .done(() => done)
         ],
         callback
-      )
+      );
     }
-  )
+  );
 };
