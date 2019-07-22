@@ -213,7 +213,7 @@ const HASHTAG_REGEX = /(#[^\u2000-\u206F\u2E00-\u2E7F\s\\'!"#$%()*,./:;<=>?@[\]^
 const extractHashtags = tags => {
   tags.comment = htmlEntities.decode(tags.comment);
   ((tags.comment || '').match(HASHTAG_REGEX) || []).map(
-    function (x) {
+    (x) => {
       x = x.slice(1).toLowerCase()
       return x
     }
