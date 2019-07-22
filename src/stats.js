@@ -211,16 +211,10 @@ SET id=$1,
 const HASHTAG_REGEX = /(#[^\u2000-\u206F\u2E00-\u2E7F\s\\'!"#$%()*,./:;<=>?@[\]^`{|}~]+)/g
 
 const extractHashtags = tags => {
-  tags.comment = htmlEntities.decode(tags.comment);
-  ((tags.comment || '').match(HASHTAG_REGEX) || []).map(
-    (x) => {
-      x = x.slice(1).toLowerCase()
-      return x
-    }
-
-  )
+  tags.comment = htmlEntities.decode(tags.comment)
+  return ((tags.comment || "").match(HASHTAG_REGEX) || []).map(x =>
+    x.slice(1).toLowerCase());
 }
-
 
 const changesetUpdater = changeset => {
   const {
