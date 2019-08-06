@@ -25,7 +25,7 @@ const QUERIES = [
     JOIN raw_changesets c ON c.id = ch.changeset_id
     JOIN raw_hashtags h ON h.id = ch.hashtag_id
     GROUP BY hashtag
-    ON CONFLICT do nothing;`
+    ON CONFLICT do update;`
   
 ];
 
