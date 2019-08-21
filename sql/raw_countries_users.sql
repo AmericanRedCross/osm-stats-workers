@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW raw_countries_users AS
+CREATE TABLE raw_countries_users AS
   SELECT
     country_id,
     user_id,

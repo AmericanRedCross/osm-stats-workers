@@ -1,7 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- view with a schema that matches the legacy users table
-CREATE VIEW users AS
+CREATE TABLE users AS
   SELECT
     id,
     u.name,

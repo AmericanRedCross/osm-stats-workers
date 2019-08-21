@@ -1,5 +1,5 @@
 -- view with a schema that matches the legacy hashtags table
-CREATE VIEW hashtags AS
+CREATE TABLE hashtags AS
   SELECT
     id,
     hashtag

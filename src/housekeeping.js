@@ -2,10 +2,31 @@ const env = require("require-env");
 const { Pool } = require("pg");
 
 const QUERIES = [
-  "REFRESH MATERIALIZED VIEW CONCURRENTLY hashtag_stats",
-  "REFRESH MATERIALIZED VIEW CONCURRENTLY raw_countries_users",
-  "REFRESH MATERIALIZED VIEW CONCURRENTLY raw_hashtags_users",
-  "REFRESH MATERIALIZED VIEW CONCURRENTLY user_stats"
+  `INSERT INTO hashtag_stats 
+    SELECT 
+      hashtag,
+      count(c.id) changesets,
+      count(distinct c.user_id) users,
+      sum(road_km_added) road_km_added,
+      sum(road_km_modified) road_km_modified,
+      sum(waterway_km_added) waterway_km_added,
+      sum(waterway_km_modified) waterway_km_modified,
+      sum(roads_added) roads_added,
+      sum(roads_modified) roads_modified,
+      sum(waterways_added) waterways_added,
+      sum(waterways_modified) waterways_modified,
+      sum(buildings_added) buildings_added,
+      sum(buildings_modified) buildings_modified,
+      sum(pois_added) pois_added,
+      sum(pois_modified) pois_modified,
+      sum(pois_modified) josm_edits, 
+      max(coalesce(closed_at, created_at))  
+    FROM raw_changesets_hashtags ch
+    JOIN raw_changesets c ON c.id = ch.changeset_id
+    JOIN raw_hashtags h ON h.id = ch.hashtag_id
+    GROUP BY hashtag
+    ON CONFLICT do update;`
+  
 ];
 
 const query = async (pool, query) => {
