@@ -2,6 +2,7 @@ const env = require("require-env");
 const { Pool } = require("pg");
 
 const QUERIES = [
+  "VACUUM (VERBOSE)",
   "REFRESH MATERIALIZED VIEW CONCURRENTLY hashtag_stats",
   "REFRESH MATERIALIZED VIEW CONCURRENTLY raw_countries_users",
   "REFRESH MATERIALIZED VIEW CONCURRENTLY raw_hashtags_users",
