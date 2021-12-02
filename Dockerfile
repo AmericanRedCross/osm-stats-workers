@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:12
 
 ARG NODE_ENV=production
 ENV NPM_CONFIG_LOGLEVEL warn
