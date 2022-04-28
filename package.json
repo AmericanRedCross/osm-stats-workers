@@ -21,7 +21,7 @@
     "@turf/helpers": "^6.0.1",
     "@turf/length": "^5.1.5",
     "@turf/meta": "^6.0.1",
-    "async": "^2.6.0",
+    "async": "^2.6.4",
     "babel-polyfill": "^6.26.0",
     "core-js": "^3.0.0-beta.16",
     "epipebomb": "^1.0.0",
